@@ -54,12 +54,19 @@ void draw_curve(vector<Vertex> control_points, int n_iter) {
     // Draw a Bezier curve based on the given control points
     
 }
-
+// for scaling --> 5:1
 void display() {
     glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
     // Set our color to black (R, G, B)
     glColor3f(0.0f, 0.0f, 0.0f);
-    
+    glPointSize(5.0f);
+    glBegin(GL_POINTS);
+        glVertex2f(-.4, 0);
+        glVertex2f(0,.1);
+        glVertex2f(.5,0);
+        glVertex2f(-.4, -.4);
+        glVertex2f(.1,.3);
+    glEnd();
     // TODO:
     // Draw cartoon
     
@@ -70,7 +77,7 @@ int main(int argc, char *argv[]) {
     glutInit(&argc, argv);
     glutInitDisplayMode(GLUT_RGB | GLUT_DEPTH | GLUT_DOUBLE);
     glutInitWindowSize(800,600); // Set your own window size
-    glutCreateWindow("Assignment 1");
+    glutCreateWindow("Moriah Tolliver Assignment 1");
     setup();
     glutDisplayFunc(display);
     glutMainLoop();
