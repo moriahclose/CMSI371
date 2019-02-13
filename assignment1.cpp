@@ -67,15 +67,12 @@ void draw_curve(vector<Vertex> control_points, int n_iter) {
         points = generate_points(points);
     }
     
-    glPointSize(5.0f);
+    glLineWidth(2.0f);
     glBegin(GL_LINES);
     for (int i =0; i < points.size()-1; i++) {
         glVertex2f(points.at(i).get_x(), points.at(i).get_y());
         glVertex2f(points.at(i+1).get_x(), points.at(i+1).get_y());
     }
-    //connect last points
-    glVertex2f(points.front().get_x(), points.front().get_y());
-    glVertex2f(points.back().get_x(), points.back().get_y());
     glEnd();
     
 }
@@ -109,13 +106,48 @@ void display() {
         Vertex(.5f,-.7f),
         Vertex(.35f, -.85f),
         Vertex(.25f,-.95f),
-        Vertex(.1f,-.95f)};
+        Vertex(.1f,-.95f),
+        Vertex(-.1f,-.9f)
+    };
+    
+    vector<Vertex> face = {
+        Vertex(-.34f,.02f),
+        Vertex(-.226f,.164f),
+        Vertex(.27f,.17f),
+        Vertex(.523f,.077f),
+        Vertex(.365f,-.375f),
+        Vertex(.16f,-.34f),
+        Vertex(.067f,-.383f),
+        Vertex(.004f,-.33f),
+        Vertex(-.206f,-.506f),
+        Vertex(-.385f,-.244f),
+        Vertex(-.357f,-.006f)
+    };
+    
+    vector<Vertex> left_eyebrow = {
+        Vertex(-.315f,-.035f),
+        Vertex(-.23f,.028f),
+        Vertex(-.11f,.04f),
+        Vertex(-.015f,.016f)
+    };
+    
+    vector<Vertex> right_eyebrow = {
+        Vertex(.18f,.063f),
+        Vertex(.317f,.086f),
+        Vertex(.402f,.08f),
+        Vertex(.477f,.043f)
+    };
+    
     glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
     // Set our color to black (R, G, B)
     glColor3f(0.0f, 0.0f, 0.0f);
     
-    draw_curve(hair, 30);
-    
+    draw_curve(hair, 20);
+    draw_curve(face, 1);
+    draw_curve(left_eyebrow, 20);
+    draw_curve(right_eyebrow, 20);
+
+
     glutSwapBuffers();
 }
 
