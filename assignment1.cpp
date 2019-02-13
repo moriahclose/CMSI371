@@ -2,7 +2,7 @@
  assignment1.cpp
  Assignment-1: Cartoonify
  
- Name: Wong, Alex (Please write your name in Last Name, First Name format)
+ Name: Tolliver, Moriah (Please write your name in Last Name, First Name format)
  
  Collaborators: Doe, John; Doe, Jane
  ** Note: although the assignment should be completed individually
@@ -13,6 +13,7 @@
  did for the project: e.g. did you use the Chaikin's or Bezier's algorithm?
  Did you take an iterative or recursive approach?
  ***/
+
 
 #include <OpenGL/gl.h>
 #include <OpenGL/glu.h>
@@ -41,34 +42,79 @@ void setup() {
 
 vector<Vertex> generate_points(vector<Vertex> control_points) {
     vector<Vertex> points;
+    points = control_points;
+    vector<Vertex> midpoints;
+    Vertex initial_point = points.front();
+    Vertex end_point = points.back();
     
-    // TODO:
-    // Generate points for a given Bezier curve iteration
+    for ( int i =0; i < points.size()-1; i++ ) {
+        float x = 0.5 * (points.at(i).get_x() + points.at(i+1).get_x());
+        float y = 0.5 * (points.at(i).get_y() + points.at(i+1).get_y());
+        midpoints.push_back(Vertex(x,y));
+    }
+    points = midpoints;
+    points.insert(points.begin(), initial_point);
+    points.insert(points.end(), end_point);
     
     return points;
 }
 
 void draw_curve(vector<Vertex> control_points, int n_iter) {
+    vector<Vertex> points;
+    points = control_points;
     
-    // TODO:
-    // Draw a Bezier curve based on the given control points
+    for ( int i =0; i < n_iter; i++ ) {
+        points = generate_points(points);
+    }
+    
+    glPointSize(5.0f);
+    glBegin(GL_LINES);
+    for (int i =0; i < points.size()-1; i++) {
+        glVertex2f(points.at(i).get_x(), points.at(i).get_y());
+        glVertex2f(points.at(i+1).get_x(), points.at(i+1).get_y());
+    }
+    //connect last points
+    glVertex2f(points.front().get_x(), points.front().get_y());
+    glVertex2f(points.back().get_x(), points.back().get_y());
+    glEnd();
     
 }
-// for scaling --> 5:1
+
 void display() {
+    vector<Vertex> hair =
+    {Vertex(-.095f,-.905f),
+        Vertex(-.2f,-.8f),
+        Vertex(-.3f,-.7f),
+        Vertex(-.4f,-.6f),
+        Vertex(-.55f,-.5f),
+        Vertex(-.65f,-.35f),
+        Vertex(-.75f,-.2f),
+        Vertex(-.8f,0),
+        Vertex(-.8f,.2f),
+        Vertex(-.8f,.35f),
+        Vertex(-.75f,.55f),
+        Vertex(-.6f,.7f),
+        Vertex(-.3f,.9f),
+        Vertex(.25f,.98f),
+        Vertex(.5f,.9f),
+        Vertex(.7f,.8f),
+        Vertex(.904f,.507f),
+        Vertex(.97f,.3f),
+        Vertex(.95f,0),
+        Vertex(.9f,-.2f),
+        Vertex(.85f,-.4f),
+        Vertex(.7f,-.5f),
+        Vertex(.6f,-.45f),
+        Vertex(.6f,-.55f),
+        Vertex(.5f,-.7f),
+        Vertex(.35f, -.85f),
+        Vertex(.25f,-.95f),
+        Vertex(.1f,-.95f)};
     glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
     // Set our color to black (R, G, B)
     glColor3f(0.0f, 0.0f, 0.0f);
-    glPointSize(5.0f);
-    glBegin(GL_POINTS);
-        glVertex2f(-.4, 0);
-        glVertex2f(0,.1);
-        glVertex2f(.5,0);
-        glVertex2f(-.4, -.4);
-        glVertex2f(.1,.3);
-    glEnd();
-    // TODO:
-    // Draw cartoon
+    
+    draw_curve(hair, 30);
     
     glutSwapBuffers();
 }
