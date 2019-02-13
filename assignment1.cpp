@@ -138,6 +138,73 @@ void display() {
         Vertex(.477f,.043f)
     };
     
+    vector<Vertex> right_eye = {
+        Vertex(.17f,-.042f),
+        Vertex(.22f,.004f),
+        Vertex(.285f,.02f),
+        Vertex(.37f,-.003f),
+        Vertex(.313f,-.04f),
+        Vertex(.24f,-.054f),
+        Vertex(.17f, -.04f)
+    };
+    
+    vector<Vertex> left_eye = {
+        Vertex(-.24f,-.078f),
+        Vertex(-.187f,-.023f),
+        Vertex(-.1f,-.02f),
+        Vertex(-.03f,-.06f),
+        Vertex(-.116f,-.08f),
+        Vertex(-.175f, -.085f),
+        Vertex(-.24f,-.078f)
+    };
+    
+    vector<Vertex> upper_lip = {
+        Vertex(-.128f,-.48f),
+        Vertex(-.003f,-.436f),
+        Vertex(.106f,-.46f),
+        Vertex(.176f,-.43f),
+        Vertex(.332f, -.436f)
+    };
+    
+    vector<Vertex> lower_lip_top = {
+        Vertex(-.128f,-.48f),
+        Vertex(0.0f, -.53f),
+        Vertex(.11f, -.538f),
+        Vertex(.24f, -.51f),
+        Vertex(.332f, -.436f)
+    };
+    
+    vector<Vertex> lower_lip_bottom = {
+        Vertex(-.128f,-.48f),
+        Vertex(-.066f, -.58f),
+        Vertex(0.028f, -.616f),
+        Vertex(.19f, -.61f),
+        Vertex(.305f, -.522f),
+        Vertex(.332f, -.436f)
+    };
+    
+    vector<Vertex> left_nose = {
+        Vertex(-.015f,-.167f),
+        Vertex(-.05f, -.23f),
+        Vertex(-.093f,-.257f),
+        Vertex(-.073f,-.34f),
+        Vertex(.004f, -.33f)
+    };
+    
+    vector<Vertex> right_nose = {
+        Vertex(.16f, -.34f),
+        Vertex(.23f,-.304f),
+        Vertex(.23f,-.234f),
+        Vertex(.18f, -.206f),
+        Vertex(.153f,-.148f),
+    };
+    
+    vector<Vertex> nose_bottom = {
+        Vertex(.004f, -.33f),
+        Vertex(0.067f,-.383f),
+        Vertex(.16f, -.34f)
+    };
+    
     glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
     // Set our color to black (R, G, B)
     glColor3f(0.0f, 0.0f, 0.0f);
@@ -146,6 +213,14 @@ void display() {
     draw_curve(face, 1);
     draw_curve(left_eyebrow, 20);
     draw_curve(right_eyebrow, 20);
+    draw_curve(left_eye, 1);
+    draw_curve(right_eye, 1);
+    draw_curve(upper_lip, 10);
+    draw_curve(lower_lip_top, 10);
+    draw_curve(lower_lip_bottom, 10);
+    draw_curve(left_nose, 15);
+    draw_curve(right_nose, 15);
+    draw_curve(nose_bottom, 15);
 
 
     glutSwapBuffers();
