@@ -2,18 +2,12 @@
  assignment1.cpp
  Assignment-1: Cartoonify
  
- Name: Tolliver, Moriah (Please write your name in Last Name, First Name format)
+ Name: Tolliver, Moriah
  
- Collaborators: Doe, John; Doe, Jane
- ** Note: although the assignment should be completed individually
- you may speak with classmates on high level algorithmic concepts. Please
- list their names in this section
+ Collaborators: Patterson, Josh
  
- Project Summary: A short paragraph (3-4 sentences) describing the work you
- did for the project: e.g. did you use the Chaikin's or Bezier's algorithm?
- Did you take an iterative or recursive approach?
- ***/
-
+ Project Summary: This project uses Chaikin's algorithm to cartoonify a picture of Bob Ross. I used Desmos, an online graphing calculator, to find the control points (https://www.desmos.com/calculator, DOA: 2/13/2019). I took an iterative approach, in which the algorithm is repeated according to iteration number specified in the display method.
+*/
 
 #include <OpenGL/gl.h>
 #include <OpenGL/glu.h>
@@ -265,4 +259,3 @@ int main(int argc, char *argv[]) {
     glutMainLoop();
     return 0;
 }
-
