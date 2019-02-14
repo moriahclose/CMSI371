@@ -46,16 +46,20 @@ vector<Vertex> generate_points(vector<Vertex> control_points) {
     vector<Vertex> midpoints;
     Vertex initial_point = points.front();
     Vertex end_point = points.back();
-    
+
     for ( int i =0; i < points.size()-1; i++ ) {
-        float x = 0.5 * (points.at(i).get_x() + points.at(i+1).get_x());
-        float y = 0.5 * (points.at(i).get_y() + points.at(i+1).get_y());
+        float x = (0.25 * points.at(i).get_x()) + (0.75 * points.at(i+1).get_x());
+        float y = (0.25 * points.at(i).get_y()) + (0.75 * points.at(i+1).get_y());
+        float x2 = (0.75 * points.at(i).get_x()) + (0.25 * points.at(i+1).get_x());
+        float y2 = (0.75 * points.at(i).get_y()) + (0.25 * points.at(i+1).get_y());
+        midpoints.push_back(Vertex(x2,y2));
         midpoints.push_back(Vertex(x,y));
     }
+    
     points = midpoints;
     points.insert(points.begin(), initial_point);
     points.insert(points.end(), end_point);
-    
+
     return points;
 }
 
@@ -107,7 +111,7 @@ void display() {
         Vertex(.35f, -.85f),
         Vertex(.25f,-.95f),
         Vertex(.1f,-.95f),
-        Vertex(-.1f,-.9f)
+        Vertex(-.1f,-.9f),
     };
     
     vector<Vertex> face = {
@@ -121,7 +125,8 @@ void display() {
         Vertex(.004f,-.33f),
         Vertex(-.206f,-.506f),
         Vertex(-.385f,-.244f),
-        Vertex(-.357f,-.006f)
+        Vertex(-.357f,-.006f),
+        Vertex(-.34f,.02f)
     };
     
     vector<Vertex> left_eyebrow = {
@@ -156,6 +161,26 @@ void display() {
         Vertex(-.116f,-.08f),
         Vertex(-.175f, -.085f),
         Vertex(-.24f,-.078f)
+    };
+    
+    vector<Vertex> left_left_pupil = {
+        Vertex(-.187f, -.023f),
+        Vertex(-.175f, -.085f)
+    };
+    
+    vector<Vertex> right_left_pupil = {
+        Vertex(-.1f, -.02f),
+        Vertex(-.116f, -.08f)
+    };
+    
+    vector<Vertex> left_right_pupil = {
+        Vertex(.22f, .004f),
+        Vertex(.24f, -.054f)
+    };
+    
+    vector<Vertex> right_right_pupil = {
+        Vertex(.305, .016f),
+        Vertex(.284f, -.051f)
     };
     
     vector<Vertex> upper_lip = {
@@ -209,19 +234,23 @@ void display() {
     // Set our color to black (R, G, B)
     glColor3f(0.0f, 0.0f, 0.0f);
     
-    draw_curve(hair, 20);
-    draw_curve(face, 1);
-    draw_curve(left_eyebrow, 20);
-    draw_curve(right_eyebrow, 20);
-    draw_curve(left_eye, 1);
-    draw_curve(right_eye, 1);
-    draw_curve(upper_lip, 10);
-    draw_curve(lower_lip_top, 10);
-    draw_curve(lower_lip_bottom, 10);
-    draw_curve(left_nose, 15);
-    draw_curve(right_nose, 15);
-    draw_curve(nose_bottom, 15);
-
+    int n_iter = 5;
+    draw_curve(hair, n_iter);
+    draw_curve(face, n_iter);
+    draw_curve(left_eyebrow, n_iter);
+    draw_curve(right_eyebrow, n_iter);
+    draw_curve(left_eye, n_iter);
+    draw_curve(right_eye, n_iter);
+    draw_curve(upper_lip, n_iter);
+    draw_curve(lower_lip_top, n_iter);
+    draw_curve(lower_lip_bottom, n_iter);
+    draw_curve(left_nose, n_iter);
+    draw_curve(right_nose, n_iter);
+    draw_curve(nose_bottom, n_iter);
+    draw_curve(left_left_pupil, n_iter);
+    draw_curve(right_left_pupil, n_iter);
+    draw_curve(left_right_pupil, n_iter);
+    draw_curve(right_right_pupil, n_iter);
 
     glutSwapBuffers();
 }
