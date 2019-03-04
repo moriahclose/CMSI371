@@ -1,0 +1,91 @@
+@font-stack:    Helvetica, sans-serif;
+
+// theme colors
+@dark: #DE6B48;
+@medium: #E5B181;
+@light: #F4B9B2;
+@highlight: #DAEDBD;
+@accent: #7DBBC3;
+@background: #e2e0db;
+@white: #FFFFFF;
+
+
+
+* {
+    font-family: @font-stack;
+}
+
+h1, h4 {
+    text-align: center;
+    margin: 5%;
+}
+
+#navbar {
+    background-color: @dark;
+    align-items: center;
+    text-align: center;
+}
+
+.exam-button {
+    display: inline-block;
+    padding: 2%;
+    color: @white;
+
+    &:hover {
+        background-color: @medium;
+    }
+}
+
+.sub-nav {
+    background-color: @medium;
+    align-items: center;
+    text-align: center;
+    display: none;
+}
+
+.subnav-btn {
+    display: inline-block;
+    padding: 2%;
+    color: @white;
+
+    &:hover {
+        background-color: @dark;
+    }
+}
+
+
+.subtitle {
+    color: @medium;
+    margin-left: 2%;
+}
+
+.question {
+    padding: 2%;
+    text-align: center;
+    background-color: rgba(red(@dark), green(@dark), blue(@dark), .1);
+    color: @dark;
+    margin: 2%;
+    border: 1px solid @dark;
+    border-radius: 5px;
+}
+
+.answer {
+    display: none;
+    padding: 4%;
+    background-color: rgba(red(@accent), green(@accent), blue(@accent), .1);
+    color: @accent;
+    margin: 2%;
+    border: 1px solid @accent;
+    border-radius: 5px;
+}
+
+.code {
+    background-color: @highlight;
+    border-radius: 5px;
+    padding: 2%;
+}
+
+table {
+    border: 1px solid @highlight;
+    border-radius: 5px;
+}

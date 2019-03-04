@@ -1,0 +1,337 @@
+<head>
+    <title>Graphics Made EZ</title>
+    <link rel="shortcut icon" href="/favicon.ico" />
+
+    <link rel="stylesheet/less" type="text/css" href="styles.less" />
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+</head>
+
+<body>
+    <div id="navbar">
+        <a href="exam1.html"><div class="exam-button">Exam 1</div></a>
+        <div class="exam-button">Exam 2</div>
+        <div class="exam-button">Exam 3</div>
+    </div>
+    <div class="sub-nav" id="subnav0">
+        <a href="#midterm-study-guide"><div class="subnav-btn">Study Guide</div></a>
+        <a href="#midterm-study-guide"><div class="subnav-btn">Chaikin and Bezier</div></a>
+        <a href="#midterm-study-guide"><div class="subnav-btn">2D Transformations</div></a>
+        <a href="#midterm-study-guide"><div class="subnav-btn">3D Transformations</div></a>
+        <a href="#midterm-study-guide"><div class="subnav-btn">Camera Model</div></a>
+        <a href="#midterm-study-guide"><div class="subnav-btn">Viewing and Camera Transform</div></a>
+    </div>
+    <div class="section" id="midterm-study-guide">
+        <h1 class="section-title">Midterm Study Guide</h1>
+
+        <h2 class="subtitle">Chaikin and Bezier Curve</h2>
+            <div class="question">What are affine spaces and combinations?</div>
+            <div class="answer" id="answer2"><b>Affine Combination:</b> points represented by some linear combination that sums to 1.</br><b>Affine Space:</b> space in which the points in an affine combination exist</br></br>
+                <div class="example">ex: 3 points give a plane: p = t<sub>1</sub>p<sub>1</sub> + t<sub>2</sub>p<sub>2</sub> + t<sub>3</sub>p<sub>3</sub> where t<sub>1</sub> + t<sub>2</sub> + t<sub>3</sub> = 1</div>
+            </div>
+
+            <div class="question">What does Chaikin Curve algorithm entail?</div>
+            <div class="answer" id="answer4"><b>In plain terms, Chaikin's algorithm entails making 1/4 and 3/4 points between each control point for a certain number of iterations, then connecting all of the points.</b></br></br>
+                <div class="code"><b>In psuedo code:</b></br></br>
+                    Given N control points in a set P:</br>
+                    <b>while</b> not satified do</br>
+                    | &nbsp;<b>for</b> i = 1,2,...|P|- 1 do</br>
+                    | &nbsp;&nbsp; | &nbsp;p<sub>0</sub> = 1/4(P(i) + P(i + 1))</br>
+                    | &nbsp;&nbsp; | &nbsp;p<sub>1</sub> = 3/4(P(i) + P(i + 1))</br>
+                    | &nbsp;&nbsp; | &nbsp;Add p<sub>0</sub> and p<sub>1</sub> to new set of points Q</br>
+                    | &nbsp;P &larr; Q</br></br>
+                    <b>for</b> j = 1,2,...,|P| - 1 do</br>
+                    | &nbsp; Connect P(j) and P(j + 1)
+                </div>
+            </div>
+            <div class="question">What does Bezier Curve algorithm entail?</div>
+            <div class="answer" id="answer6"><b>In plain terms, Beziers's algorithm entails getting midpoints between each control point for a certain number of iterations, then connecting all of the points.</b></br></br>
+                <div class="code"><b>In psuedo code:</b></br></br>
+                    Given N control points in a set P:</br>
+                    Assume the curve always touches p(0) and p(N)</br>
+                    <b>while</b> not satified do</br>
+                    | &nbsp;<b>for</b> i = 1,2,...N- 1 do</br>
+                    | &nbsp;&nbsp; | &nbsp<b>for</b> j = 1,2,...|P|- 1 do</br>
+                    | &nbsp;&nbsp; | &nbsp; | &nbsp;m = 1/4(P(i) + P(i + 1))</br>
+                    | &nbsp;&nbsp; | &nbsp; | &nbsp;Add m to new set of points M</br>
+                    | &nbsp;&nbsp; | &nbsp; Add M to Q</br>
+                    | &nbsp;P &larr; Q</br></br>
+                    <b>for</b> j = 1,2,...,|P| - 1 do</br>
+                    | &nbsp; Connect P(j) and P(j + 1)
+                </div>
+            </div>
+
+            <div class="question">What does Bezier Curve guarantee that Chaikin does not?</div>
+                <div class="answer" id="answer8">Bezier's Curve guarantees that the first and last control points and last computed midpoint will all appear on the final curve.</div>
+
+            <div class="question">As we approach the limit of the number of iterations for Chaiking Curves, why do the points generated eventually converge to those of Bezier Curves?</div>
+                <div class="answer" id="answer10">Since the algorithm foms new points from the 1/4 and 3/4 marks between a pair of points, as time approaches the limit, we converge to the midpoint of the original line segment, which is what Bezier's algorithm originally calculates.</div>
+
+            <div class="question">For three points, we notice that Bezier curve actually describes a triangle. What is the name of this coordinate system and the type of polynomials we must use for its coefficients? What constraints must we set for its parameter in order to properly describe the plane?</div>
+                <div class="answer" id="answer12">
+                    The answers to this question all refer to the equation <b>p = (1-t)<sup>2</sup>p<sub>0</sub> + 2t(1-t)p<sub>1</sub> + t<sup>2</sup>p<sub>2</sub></b></br></br>
+                    <b>Barycentric Coordinates:</b> coordinates that represent any triangle given three points</br></br>
+                    <b>Bernstein Polynomials:</b> polynomial in which curve is bounded within p<sub>0</sub>, p<sub>1</sub>, and p<sub>2</sub> meaning that <i>t</i> must satisfy the constraint t &#8712; [0,1]</br></br>
+                    The parameters of a Bernstein Polynomial must all add up to 1.
+                </div>
+            <div class="question">We have seen the recursive formula of a 3 point Bezier Curve generalize to a quadratic equation, how should higher order (more points) Bezier Curves generalize mathematically?</div>
+                <div class="answer" id="answer14">Bezier curves arrive at higher order Bernstein polynomials (e.g., for 27 points, we will get an order 26 Bernstein polynomial).</div>
+
+        <h2 class="subtitle">2D Transformations</h2>
+            <div class="question">How can we define a point in 2D as a linear combination of its coordinates with respect to the origin?</div>
+                <div class="answer" id="answer17">P = x &#8407;v + y &#8407u + &#981;</br>
+                    where P = (x,y), v &#8407 is the horizontal axis, and u &#8407 is the vertical axis</br></br>
+                    This is derived from the dot product of [u v w &#981;] with [x y z 1]
+
+                </div>
+
+            <div class="question">Why do we need to center ourselves at the origin when doing scaling and rotations when this is not necessary for translation?</div>
+                <div class="answer" id="answer19">This is necessary only for scaling and rotation, because these two operations occur relative to the object frame, while translation happens with respect to the world frame.</div>
+
+            <div class="question">How can we perform a rotation about an arbitrary point?</div>
+                <div class="answer" id="answer21">
+                    <ol>
+                        <li>Translate the point and object to the origin.</li>
+                        <li>Rotate the object by &#x3b8;.</li>
+                        <li>Translate the point and object back by their offset.</li>
+                    </ol>
+                </div>
+
+        <h2 class="subtitle">3D Transformations</h2>
+            <div class="question">What is the significance of an inverse of a matrix? What constraint must it satisfy? How can we find the inverse of a given matrix?</div>
+                <div class="answer" id="answer24">
+                    <b>Significance:</b> an inverse matrix can get us back to our original points</br></br>
+                    <b>Constraints:</b></br>
+                    &nbsp; AB = I = BA</br>
+                    &nbsp; A<sup>-1</sup> = B</br>
+                    &nbsp; B<sup>-1</sup> = A</br>
+                    &nbsp; AA<sup>-1</sup> = BB<sup>-1</sup> = I</br></br>
+                    <b>Steps to find Inverse</b></br>
+                        <ol>
+                            <li>We may add 2 equations</li>
+                            <li>We may multiply 2 equations by a scalar</li>
+                            <li>We may swap positions of 2 equations</li>
+                        </ol>
+                </div>
+
+            <div class="question">We have represented our world in Cartesian coordinates (x,y,z), but have noticed that our transformations include an extra dimension. What is the functionality of the homogeneous coordinate?</div>
+                <div class="answer" id="answer26">Homogeneous coordinates allow us to account for the origin while calculating our transformations.</div>
+
+            <div class="question">How can we define a point in 3D as a linear combination of its coordinates with respect to any coordinate frame?</div>
+                <div class="answer" id="answer28">P = x &#8407;v + y &#8407u + z &#8407w + &#981;</br>
+                    where p = (x,y,z), and &#8407;v, &#8407;y, &#8407;w are the horizontal, vertical, and outgoing axes respectively.</br></br>
+                    This is derived from the dot product [u v w &#981;] and [x y z 1]
+                </div>
+
+            <div class="question">How can we utilize elementary operations (translation scaling, rotations, etc.) to perform rotations along an arbitrary axis?</div>
+                <div class="answer" id="answer30">With vector V and point P</br>
+                    <ol>
+                        <li>Translate to origin with offset of P</li>
+                        <li>Rotate V about the y-axis to get V on the y-z plane</li>
+                        <li>Rotate about the x-axis to get V to be colinear with the z-vector</li>
+                        <li>Rotate about the z-axis since we are colinear with z</li>
+                        <li>Shift everything back to its original frame of reference</li>
+                    </ol>
+                </div>
+
+        <h2 class="subtitle">Camera Model</h2>
+            <div class="question">What happens to the image generated by projected rays from the world through a pinhole camera?</div>
+                <div class="answer" id="answer33">The rays flip onto the film, so the resulting image is rotated 180&#176;.</div>
+
+            <div class="question">Given a point, a center of attention, and the field of view alpha, how can we derive the camera coordinate frame?</div>
+                <div class="answer" id="answer35">We need 3 axes and an origin.</br></br>
+                    <b>origin:</b> camera</br>
+                    <b>axis 1:</b> camera - point of attention = w</br>
+                    <b>axis 2:</b> w x <0 , 1 , 0> = u</br>
+                    <b>axis 3:</b> w x u = v
+                </div>
+            <div class="question">There exists two important frames of reference, the world frame and the camera frame. What do we need to do in order to generate  camera and its coordinate frame?</div>
+                <div class="answer" id="answer37"> We need the point of origin (the camera), we need the axis defined by the vector pointing from the camera to the center of attention, w, the axis created from the cross product of w with <0,1,0>, u, and the axis created from the cross product of w and u, v.</div>
+
+            <div class="question">We notice a strange phenomenon where the camera actually points towards the negative z-axis, how did we derive this intuition?</div>
+                <div class="answer" id="answer39">By convention, into the paper is the negative direction, therefore outward is positive.</div>
+
+            <div class="question">To model a camera visioning system, we allow a filed of view described by an angle, alpha. What additional geometric elementds did we need to add in order to form the viewing pyramid?</div>
+                <div class="answer" id="answer41">We also need a near and far planes which represent the planes at which the camera would no longer see objects in the world space.</div>
+
+        <h2 class="subtitle">Viewing and Camera Transform</h2>
+            <div class="question">There are many ways to project a point from some dimensional space to a lower one.The specific way that we used preserves perspective. Describe the intuition behind theprojection and the corner case (suppose that we live in the negative axis of thedimension we want to project) and how this helps preserve perspective.</div>
+                <div class="answer" id="answer44">We can project to a lower dimension by dividing all the elements in a matrix by that of the highest dimension. Since this is a linear conversion, the ratios are preserved, thus preserving the persepctive.</div>
+
+            <div class="question">In order to generate realistic images, we tried several different ways to map our 4 dimensional vectors (x, y, z, w) in projective space to 3 dimensions (x, y, z) Cartesian space. What was the intuition we came up with in order to project a point in projectivespace to 3-dimensional Cartesian space such that we keep perspective (and similarly from 3-dimensional Cartesian space to 2-dimensional Cartesian space)?</div>
+                <div class="answer" id="answer46">In order to project from 4D to 3D space, divide all components by w. Likewise, in order to project from 3D space to 2D divide all components by z.</br></br>
+                    <b>4D to 3D</b> [x y z w] &#8594; [x/w y/w z/w w/w] &#8594; [x' y' z' 1]</br></br>
+                    <b>3D to 2D</b></br> [x y z] &#8594; [x/z y/z z/z] &#8594; [x' y' 1]
+                </div>
+
+            <div class="question">In order to convert from world space in camera frame to image space, we need to map the viewing pyramid to the image space cube, how can we construct the transformation given we know correspondences between the two spaces?</div>
+                <div class="answer" id="answer48">First we start with the viewing tranform V:
+                    <table>
+                        <tr>
+                            <th>1</th>
+                            <th>0</th>
+                            <th>0</th>
+                            <th>0</th>
+                        </tr>
+                        <tr>
+                            <th>0</th>
+                            <th>1</th>
+                            <th>0</th>
+                            <th>0</th>
+                        </tr><tr>
+                            <th>0</th>
+                            <th>0</th>
+                            <th>a</th>
+                            <th>b</th>
+                        </tr><tr>
+                            <th>0</th>
+                            <th>0</th>
+                            <th>-1</th>
+                            <th>0</th>
+                        </tr>
+                    </table></br>
+                    <ol>
+                        <li>Then we transform (0,0,-n) and (0,0,-f) using V.</li>
+                        <li>Next, we project these transformations to 3D</li>
+                        <li>Then, we solve the system of equations for a and b. The tip here is to solve for n+f.</li>
+                        <li>From the previous step we now know a = (n+f)/(f-n) and b = 2fn/(f-n).</li>
+                        This leaves us with the viewing transform:
+                        <table>
+                            <tr>
+                                <th>1</th>
+                                <th>0</th>
+                                <th>0</th>
+                                <th>0</th>
+                            </tr>
+                            <tr>
+                                <th>0</th>
+                                <th>1</th>
+                                <th>0</th>
+                                <th>0</th>
+                            </tr><tr>
+                                <th>0</th>
+                                <th>0</th>
+                                <th>(n+f)/(f-n)</th>
+                                <th>2fn/(f-n)</th>
+                            </tr><tr>
+                                <th>0</th>
+                                <th>0</th>
+                                <th>-1</th>
+                                <th>0</th>
+                            </tr>
+                        </table></br>
+                </div>
+            <div class="question">To convert the viewing pyramid from world space to the image space cube, we apply the viewing transform, how do we derive the terms to map the corners of the viewing pyramid to the corners of the image space cube?</div>
+                <div class="answer" id="answer50">
+                    Using the viewing transform we got using our known coordinates in the world frame and how they map to the image space, we can now complete these steps.
+                    <ol>
+                        <li>We know the point (0, ntan(&#x3b1;/2), -n) in the world frame should map to (0, 1, 1) in the image space. So first we apply the transform derived using the w intersections.</li>
+                        <li>This will give us (0, tan(&#x3b1;/2), 1). Since we are off by tan(&#x3b1;/2), we know that the first two elements on the diagonal must be cot(&#x3b1;/2) to account for the offset.</li>
+                    </ol>
+
+                    This leaves us with our final viewing transform:
+                    <table>
+                        <tr>
+                            <th>cot(/2&#x3b1;)</th>
+                            <th>0</th>
+                            <th>0</th>
+                            <th>0</th>
+                        </tr>
+                        <tr>
+                            <th>0</th>
+                            <th>cot(&#x3b1;/2)</th>
+                            <th>0</th>
+                            <th>0</th>
+                        </tr><tr>
+                            <th>0</th>
+                            <th>0</th>
+                            <th>(n+f)/(f-n)</th>
+                            <th>2fn/(f-n)</th>
+                        </tr><tr>
+                            <th>0</th>
+                            <th>0</th>
+                            <th>-1</th>
+                            <th>0</th>
+                        </tr>
+                    </table>
+                </div>
+            <div class="question">Our camera and world reference frames can be in completely different locations, how can we easily shift one reference frame to the other?</div>
+                <div class="answer" id="answer52">
+                    To do this we need a <b>Camera Transform</b> Matrix, <b>C</b>. We can derive this matrix starting with the assumption of our Cartesian axes: x = <1,0,0>, y = <0, 1, 0>, and z = <0,0,1>.</br>
+                    We also know that our Cartesian Transform will look something like
+                    <table>
+                        <tr>
+                            <th>e<sub>11</sub></th>
+                            <th>e<sub>12</sub></th>
+                            <th>e<sub>13</sub></th>
+                            <th>e<sub>14</sub></th>
+                        </tr>
+                        <tr>
+                            <th>e<sub>21</sub></th>
+                            <th>e<sub>22</sub></th>
+                            <th>e<sub>23</sub></th>
+                            <th>e<sub>24</sub></th>
+                        </tr>
+                        <tr>
+                            <th>e<sub>31</sub></th>
+                            <th>e<sub>32</sub></th>
+                            <th>e<sub>33</sub></th>
+                            <th>e<sub>34</sub></th>
+                        </tr>
+                        <tr>
+                            <th>0</th>
+                            <th>0</th>
+                            <th>0</th>
+                            <th>1</th>
+                        </tr>
+                    </table>
+                    Where the "e"s are the elements that we need to solve for.</br>
+                    P' = [u v w c]<b>C</b>[x y z 1]</br></br>
+                    <ol>
+                        <li>First we set the dot product of the preliminary <b>C</b> with our camera reference equal to our world reference.</br>
+                            <table>
+                                <tr>
+                                    <th>e<sub>11</sub></th>
+                                    <th>e<sub>12</sub></th>
+                                    <th>e<sub>13</sub></th>
+                                    <th>e<sub>14</sub></th>
+                                    <th>&nbsp;</th>
+                                    <th>x</th>
+                                </tr>
+                                <tr>
+                                    <th>e<sub>21</sub></th>
+                                    <th>e<sub>22</sub></th>
+                                    <th>e<sub>23</sub></th>
+                                    <th>e<sub>24</sub></th>
+                                    <th>&nbsp;</th>
+                                    <th>y</th>
+                                </tr>
+                                <tr>
+                                    <th>e<sub>31</sub></th>
+                                    <th>e<sub>32</sub></th>
+                                    <th>e<sub>33</sub></th>
+                                    <th>e<sub>34</sub></th>
+                                    <th>&nbsp;</th>
+                                    <th>z</th>
+                                </tr>
+                                <tr>
+                                    <th>0</th>
+                                    <th>0</th>
+                                    <th>0</th>
+                                    <th>1</th>
+                                    <th>&nbsp;</th>
+                                    <th>1</th>
+                                </tr>
+                            </table>
+
+                    </ol>
+
+                </div>
+            <div class="question">When we constructed the transformation from world frame to camera frame, weperformed cross and dot products between the camera frame axes and world frameaxes. Describe how these operations helps us achieve the transformation.</div>
+            <div class="question">How do we utilize elementary transformations the camera and viewing transform suchthat we can take points in space, perform a set of transformation and project them intoimage space?</div>
+    </div>
+
+    <div class="section">
+        <h1 class="title">
+    <script src="script.js"></script>
+    <script src="//cdnjs.cloudflare.com/ajax/libs/less.js/3.9.0/less.min.js" ></script>
+</body>
