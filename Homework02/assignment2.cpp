@@ -1,7 +1,7 @@
 /***
  Assignment-2: Rotating a Cube in 3-Dimensional Space
  
- Name: Wong, Alex (Please write your name in Last Name, First Name format)
+ Name: Tolliver, Moriah
  
  Collaborators: Doe, John; Doe, Jane
  ** Note: although the assignment should be completed individually
@@ -28,6 +28,7 @@
 
 #include <math.h>
 #include <vector>
+#include <iostream>
 using namespace std;
 
 
@@ -47,12 +48,35 @@ GLfloat* vector2array(vector<GLfloat> vec) {
     return arr;
 }
 
+void printVector( vector<float> v ) {
+    int divider = (v.size() % 4 == 0) ? 4 : 3;
+    
+    for ( int i = 0; i < v.size(); i++ ) {
+        if ( i % divider == 0) {
+            cout << endl;
+        }
+        cout << v[i];
+    }
+    cout << endl;
+}
+
 // Converts Cartesian coordinates to homogeneous coordinates
 vector<GLfloat> to_homogenous_coord(vector<GLfloat> cartesian_coords) {
     vector<GLfloat> result;
+    int resultIndex = 0;
     
-    // TODO: Append the 1 in the 4th dimension to generate homoegenous coordinates
+    for ( int i = 0; i < cartesian_coords.size(); i++ ) {
+        if ( (resultIndex+1) % 4 == 0 ) {
+            result.push_back(1);
+            resultIndex++;
+            // cout << "push_back: " << result.back();
+        }
+        result.push_back( cartesian_coords[i] );
+        resultIndex++;
+    }
     
+    //add 1 that would be out of bounds of original coordinates
+    result.push_back(1);
     return result;
 }
 
@@ -68,7 +92,7 @@ vector<GLfloat> to_cartesian_coord(vector<GLfloat> homogenous_coords) {
 // Definition of a rotation matrix about the x-axis theta degrees
 vector<GLfloat> rotation_matrix_x (float theta) {
     vector<GLfloat> rotate_mat_x;
-
+    
     // TODO: Define the rotation matrix about the x-axis
     
     return rotate_mat_x;
@@ -98,7 +122,11 @@ vector<GLfloat> rotation_matrix_z (float theta) {
 vector<GLfloat> mat_mult(vector<GLfloat> A, vector<GLfloat> B) {
     vector<GLfloat> result;
     
-    // TODO: Compute matrix multiplication of A B
+//    for ( int elInA = 0; elInA < A.size(); elInA++ ) {
+//        for ( int elInB = 0; elInB < B.size(); elInB++ ) {
+//            result[elInA][
+//        }
+//    }
     
     return result;
 }
@@ -220,7 +248,7 @@ void display_func() {
     // Draw quad point planes: each 4 vertices
     glDrawArrays(GL_QUADS, 0, 4*6);
     
-    glFlush();			//Finish rendering
+    glFlush();            //Finish rendering
     glutSwapBuffers();
 }
 
@@ -230,21 +258,55 @@ void idle_func() {
 }
 
 int main (int argc, char **argv) {
+    vector<GLfloat> points = {
+        // Front plane
+        +1.0,   +1.0,   +1.0,
+        -1.0,   +1.0,   +1.0,
+        -1.0,   -1.0,   +1.0,
+        +1.0,   -1.0,   +1.0,
+        // Back plane
+        +1.0,   +1.0,   -1.0,
+        -1.0,   +1.0,   -1.0,
+        -1.0,   -1.0,   -1.0,
+        +1.0,   -1.0,   -1.0,
+        // Right
+        +1.0,   +1.0,   -1.0,
+        +1.0,   +1.0,   +1.0,
+        +1.0,   -1.0,   +1.0,
+        +1.0,   -1.0,   -1.0,
+        // Left
+        -1.0,   +1.0,   -1.0,
+        -1.0,   +1.0,   +1.0,
+        -1.0,   -1.0,   +1.0,
+        -1.0,   -1.0,   -1.0,
+        // Top
+        +1.0,   +1.0,   +1.0,
+        -1.0,   +1.0,   +1.0,
+        -1.0,   +1.0,   -1.0,
+        +1.0,   +1.0,   -1.0,
+        // Bottom
+        +1.0,   -1.0,   +1.0,
+        -1.0,   -1.0,   +1.0,
+        -1.0,   -1.0,   -1.0,
+        +1.0,   -1.0,   -1.0,
+    };
+    vector<float> homs = to_homogenous_coord(points);
+    printVector(homs);
     // Initialize GLUT
-    glutInit(&argc, argv);
-    glutInitDisplayMode(GLUT_RGB | GLUT_DOUBLE | GLUT_DEPTH);
-    glutInitWindowSize(800, 600);
-    // Create a window with rendering context and everything else we need
-    glutCreateWindow("Assignment 2");
-    
-    setup();
-    init_camera();
-    
-    // Set up our display function
-    glutDisplayFunc(display_func);
-    glutIdleFunc(idle_func);
-    // Render our world
-    glutMainLoop();
+//    glutInit(&argc, argv);
+//    glutInitDisplayMode(GLUT_RGB | GLUT_DOUBLE | GLUT_DEPTH);
+//    glutInitWindowSize(800, 600);
+//    // Create a window with rendering context and everything else we need
+//    glutCreateWindow("Assignment 2");
+//
+//    setup();
+//    init_camera();
+//
+//    // Set up our display function
+//    glutDisplayFunc(display_func);
+//    glutIdleFunc(idle_func);
+//    // Render our world
+//    glutMainLoop();
     return 0;
 }
 
