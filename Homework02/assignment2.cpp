@@ -48,9 +48,7 @@ GLfloat* vector2array(vector<GLfloat> vec) {
     return arr;
 }
 
-void printVector( vector<float> v ) {
-    int divider = (v.size() % 4 == 0) ? 4 : 3;
-    
+void printVector( vector<float> v , int divider) {
     for ( int i = 0; i < v.size(); i++ ) {
         if ( i % divider == 0) {
             cout << endl;
@@ -83,7 +81,11 @@ vector<GLfloat> to_homogenous_coord(vector<GLfloat> cartesian_coords) {
 // Converts Cartesian coordinates to homogeneous coordinates
 vector<GLfloat> to_cartesian_coord(vector<GLfloat> homogenous_coords) {
     vector<GLfloat> result;
-    
+    for ( int i = 0; i < homogenous_coords.size(); i++ ) {
+        if ( (i+1) % 4 != 0 ) {
+            result.push_back(homogenous_coords[i] );
+        }
+    }
     // TODO: Remove the 1 in the 4th dimension to generate Cartesian coordinates
     
     return result;
@@ -291,7 +293,15 @@ int main (int argc, char **argv) {
         +1.0,   -1.0,   -1.0,
     };
     vector<float> homs = to_homogenous_coord(points);
-    printVector(homs);
+    printVector(homs,4);
+    cout << "Array size: " << homs.size();
+    cout << endl;
+    
+    vector<float> carts = to_cartesian_coord(homs);
+    printVector(carts,3);
+    cout << "Array size: " << carts.size();
+    cout << endl;
+    
     // Initialize GLUT
 //    glutInit(&argc, argv);
 //    glutInitDisplayMode(GLUT_RGB | GLUT_DOUBLE | GLUT_DEPTH);
