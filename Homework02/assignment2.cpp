@@ -3,10 +3,7 @@
  
  Name: Tolliver, Moriah
  
- Collaborators: Doe, John; Doe, Jane
- ** Note: although the assignment should be completed individually
- you may speak with classmates on high level algorithmic concepts. Please
- list their names in this section
+ Collaborators: Moini, Donovan
  
  Project Summary: A short paragraph (3-4 sentences) describing the work you
  did for the project.
@@ -48,12 +45,12 @@ GLfloat* vector2array(vector<GLfloat> vec) {
     return arr;
 }
 
-void printVector( vector<float> v , int divider) {
+void printVector( vector<GLfloat> v , int divider) {
     for ( int i = 0; i < v.size(); i++ ) {
         if ( i % divider == 0) {
             cout << endl;
         }
-        cout << v[i];
+        cout << v[i] << " ";
     }
     cout << endl;
 }
@@ -78,7 +75,7 @@ vector<GLfloat> to_homogenous_coord(vector<GLfloat> cartesian_coords) {
     return result;
 }
 
-// Converts Cartesian coordinates to homogeneous coordinates
+// Converts homogeneous coordinates to Cartesian coordinates
 vector<GLfloat> to_cartesian_coord(vector<GLfloat> homogenous_coords) {
     vector<GLfloat> result;
     for ( int i = 0; i < homogenous_coords.size(); i++ ) {
@@ -95,7 +92,17 @@ vector<GLfloat> to_cartesian_coord(vector<GLfloat> homogenous_coords) {
 vector<GLfloat> rotation_matrix_x (float theta) {
     vector<GLfloat> rotate_mat_x;
     
-    // TODO: Define the rotation matrix about the x-axis
+    GLfloat thetaInRads = deg2rad( theta );
+    
+    rotate_mat_x.push_back(1);
+    rotate_mat_x.push_back(0);
+    rotate_mat_x.push_back(0);
+    rotate_mat_x.push_back(0);
+    rotate_mat_x.push_back(cos(thetaInRads) );
+    rotate_mat_x.push_back( -1 * sin(thetaInRads) );
+    rotate_mat_x.push_back(0);
+    rotate_mat_x.push_back(sin(thetaInRads) );
+    rotate_mat_x.push_back(cos(thetaInRads) );
     
     return rotate_mat_x;
 }
@@ -105,7 +112,17 @@ vector<GLfloat> rotation_matrix_x (float theta) {
 vector<GLfloat> rotation_matrix_y (float theta) {
     vector<GLfloat> rotate_mat_y;
     
-    // TODO: Define the rotation matrix about the y-axis
+    GLfloat thetaInRads = deg2rad( theta );
+    
+    rotate_mat_y.push_back(cos(thetaInRads));
+    rotate_mat_y.push_back(0);
+    rotate_mat_y.push_back(sin(thetaInRads));
+    rotate_mat_y.push_back(0);
+    rotate_mat_y.push_back(1);
+    rotate_mat_y.push_back(0);
+    rotate_mat_y.push_back( -1 * sin(thetaInRads) );
+    rotate_mat_y.push_back(0);
+    rotate_mat_y.push_back(cos(thetaInRads) );
     
     return rotate_mat_y;
 }
@@ -115,21 +132,37 @@ vector<GLfloat> rotation_matrix_y (float theta) {
 vector<GLfloat> rotation_matrix_z (float theta) {
     vector<GLfloat> rotate_mat_z;
     
-    // TODO: Define the rotation matrix about the z-axis
+    GLfloat thetaInRads = deg2rad( theta );
+    
+    rotate_mat_z.push_back(cos(thetaInRads));
+    rotate_mat_z.push_back(-1 * sin(thetaInRads));
+    rotate_mat_z.push_back(0);
+    rotate_mat_z.push_back(sin(thetaInRads));
+    rotate_mat_z.push_back(cos(thetaInRads));
+    rotate_mat_z.push_back(0);
+    rotate_mat_z.push_back(0);
+    rotate_mat_z.push_back(0);
+    rotate_mat_z.push_back(1);
     
     return rotate_mat_z;
 }
 
-// Perform matrix multiplication for A B
+// Perform matrix multiplication for A B where A is a 4x4 matrix and B is a 4x1 matrix
 vector<GLfloat> mat_mult(vector<GLfloat> A, vector<GLfloat> B) {
     vector<GLfloat> result;
-    
-//    for ( int elInA = 0; elInA < A.size(); elInA++ ) {
-//        for ( int elInB = 0; elInB < B.size(); elInB++ ) {
-//            result[elInA][
-//        }
-//    }
-    
+
+    for ( int aIndex = 0; aIndex < floor(A.size()/4); aIndex++ ) {
+        int element = 0;
+        for ( int bIndex = 0; bIndex < B.size(); bIndex++ ) {
+            element += A[ (aIndex*4) + (bIndex%4)] * B[bIndex];
+            cout << A[ (aIndex*4) + (bIndex%4)] << "*" << B[bIndex] << "+";
+            if ( (bIndex+1) % 4 == 0 ) {
+                cout << "    ";
+                result.push_back(element);
+                element = 0;
+            }
+        }
+    }
     return result;
 }
 
@@ -292,15 +325,48 @@ int main (int argc, char **argv) {
         -1.0,   -1.0,   -1.0,
         +1.0,   -1.0,   -1.0,
     };
-    vector<float> homs = to_homogenous_coord(points);
-    printVector(homs,4);
-    cout << "Array size: " << homs.size();
-    cout << endl;
     
-    vector<float> carts = to_cartesian_coord(homs);
-    printVector(carts,3);
-    cout << "Array size: " << carts.size();
-    cout << endl;
+    vector<float> A;
+    A.push_back(1);
+    A.push_back(2);
+    A.push_back(3);
+    A.push_back(4);
+    A.push_back(5);
+    A.push_back(6);
+    A.push_back(7);
+    A.push_back(8);
+    
+    vector<float> B;
+    B.push_back(1);
+    B.push_back(2);
+    B.push_back(3);
+    B.push_back(4);
+    B.push_back(5);
+    B.push_back(6);
+    B.push_back(7);
+    B.push_back(8);
+    B.push_back(1);
+    B.push_back(2);
+    B.push_back(3);
+    B.push_back(4);
+    B.push_back(5);
+    B.push_back(6);
+    B.push_back(7);
+    B.push_back(8);
+
+
+//    vector<float> homs = to_homogenous_coord(points);
+//    printVector(homs,4);
+//    cout << "Array size: " << homs.size();
+//    cout << endl;
+//
+//    vector<float> carts = to_cartesian_coord(homs);
+//    printVector(carts,3);
+//    cout << "Array size: " << carts.size();
+//    cout << endl;
+    
+    vector<GLfloat> mult = mat_mult(A, B);
+    printVector(mult, 4);
     
     // Initialize GLUT
 //    glutInit(&argc, argv);
