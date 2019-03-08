@@ -3,7 +3,7 @@
  
  Name: Tolliver, Moriah
  
- Collaborators: Doe, John; Doe, Jane
+ Collaborators: Moini, Donovan
  ** Note: although the assignment should be completed individually
  you may speak with classmates on high level algorithmic concepts. Please
  list their names in this section
@@ -154,28 +154,6 @@ vector<GLfloat> mat_mult(vector<GLfloat> A, vector<GLfloat> B) {
     return result;
 }
 
-//vector<GLfloat> mat_mult(vector<GLfloat> A, vector<GLfloat> B) {
-//    vector<GLfloat> result;
-//
-//    for ( int bIndex = 0; bIndex < floor(B.size()/4); bIndex++ ) {
-//        GLfloat element = 0;
-//        for ( int aIndex = 0; aIndex < A.size(); aIndex++ ) {
-//            GLfloat num = A[ (aIndex*4) + (bIndex%4)] * B[bIndex];
-//            if (num < EPSILON && num > (-1 * EPSILON)) {
-//                num = 0;
-//            }
-//            element += num;
-//            if ( (aIndex+1) % 4 == 0 ) {
-//                result.push_back(element);
-//                element = 0;
-//                cout << "   ";
-//            }
-//        }
-//    }
-//    return result;
-//}
-
-
 void setup() {
     // Enable the vertex array functionality
     glEnableClientState(GL_VERTEX_ARRAY);
@@ -276,37 +254,15 @@ void display_func() {
     
     // TODO: Apply rotation(s) to the set of points
     vector<GLfloat> homogeneous_points = to_homogenous_coord(points);
-        cout << "Homogenous coordinates: " << endl;
-        printVector(homogeneous_points, 4);
-        cout << endl;
-    //
-        vector<GLfloat> rotate_x = rotation_matrix_x(deg2rad(theta));
-        cout << "Rotation matrix x: " << endl;
-        printVector(rotate_x, 4);
-        cout << endl;
-    
-//        vector<GLfloat> rotate_y = rotation_matrix_y(deg2rad(theta));
-//        cout << "Rotation matrix y: " << endl;
-//        printVector(rotate_y, 4);
-//        cout << endl;
-//
-//        vector<GLfloat> rotate_z = rotation_matrix_z(deg2rad(theta));
-//        cout << "Rotation matrix z: " << endl;
-//        printVector(rotate_z, 4);
-//        cout << endl;
-    //
-        vector<GLfloat> rotated_points_x = mat_mult(rotate_x, homogeneous_points);
-        cout << "Rotated coordinates: " << endl;
-        printVector(rotated_points_x, 4);
-        cout << endl;
-    //    vector<GLfloat> rotate_y = rotation_matrix_y(deg2rad(theta));
-    //    vector<GLfloat> rotated_points_y = mat_mult(rotate_y, rotated_points_x);
-//    vector<GLfloat> rotate_z = rotation_matrix_z(theta);
-//        vector<GLfloat> rotated_points_z = mat_mult(rotate_z, homogeneous_points);
-        points = to_cartesian_coord(rotated_points_x);
-//    points = cartesian_rotated_points;
-    
-    
+    vector<GLfloat> rotate_x = rotation_matrix_x(deg2rad(theta));
+    vector<GLfloat> rotate_y = rotation_matrix_y(deg2rad(theta));
+    vector<GLfloat> rotate_z = rotation_matrix_z(deg2rad(theta));
+
+    vector<GLfloat> rotated_points_x = mat_mult(rotate_x, homogeneous_points);
+    vector<GLfloat> rotated_points_y = mat_mult(rotate_y, rotated_points_x);
+    vector<GLfloat> rotated_points_z = mat_mult(rotate_z, rotated_points_y);
+    points = to_cartesian_coord(rotated_points_z);
+
     GLfloat* vertices = vector2array(points);
     
     glVertexPointer(3,          // 3 components (x, y, z)
