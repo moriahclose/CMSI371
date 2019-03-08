@@ -4,12 +4,8 @@
  Name: Tolliver, Moriah
  
  Collaborators: Moini, Donovan
- ** Note: although the assignment should be completed individually
- you may speak with classmates on high level algorithmic concepts. Please
- list their names in this section
  
- Project Summary: A short paragraph (3-4 sentences) describing the work you
- did for the project.
+ Project Summary: First, the initial cartesian coordinates of the cube are converted to homogeneous coordinates. Next, the homogeneous coordinates are multiplied by the rotation matrix about x. These points are then multiplied by the rotation matrix about y, and the same is done for these points about z. This allows the cube to rotate in a helix like fashion. Then the final set of points are converted back to certesian coordinates and drawn with OpenGL.
  ***/
 
 #pragma GCC diagnostic ignored "-Wdeprecated-declarations"
@@ -28,7 +24,6 @@
 
 #include <math.h>
 #include <vector>
-#include <iostream>
 
 using namespace std;
 
@@ -48,16 +43,6 @@ GLfloat* vector2array(vector<GLfloat> vec) {
         arr[i] = vec[i];
     }
     return arr;
-}
-
-void printVector( vector<GLfloat> v , int divider) {
-    for ( int i = 0; i < v.size(); i++ ) {
-        if ( i % divider == 0) {
-            cout << endl;
-        }
-        cout << v[i] << " ";
-    }
-    cout << endl;
 }
 
 // Converts Cartesian coordinates to homogeneous coordinates
@@ -131,7 +116,7 @@ vector<GLfloat> rotation_matrix_z (float theta) {
     return rotate_mat_z;
 }
 
-// Perform matrix multiplication for A B where A is a 4x4 matrix and B is a 4x1 matrix
+// Perform matrix multiplication for A B
 vector<GLfloat> mat_mult(vector<GLfloat> A, vector<GLfloat> B) {
     vector<GLfloat> result;
 
@@ -143,9 +128,7 @@ vector<GLfloat> mat_mult(vector<GLfloat> A, vector<GLfloat> B) {
                 num = 0;
             }
             element += num;
-            //            cout << A[ (aIndex*4) + (bIndex%4)] << "*" << B[bIndex] << "+";
             if ( (aIndex+1) % 4 == 0 ) {
-                //                cout << "    ";
                 result.push_back(element);
                 element = 0;
             }
@@ -289,21 +272,6 @@ void idle_func() {
 }
 
 int main (int argc, char **argv) {
-    
-    //
-    ////    vector<float> homs = to_homogenous_coord(points);
-    ////    printVector(homs,4);
-    ////    cout << "Array size: " << homs.size();
-    ////    cout << endl;
-    ////
-    ////    vector<float> carts = to_cartesian_coord(homs);
-    ////    printVector(carts,3);
-    ////    cout << "Array size: " << carts.size();
-    ////    cout << endl;
-    //
-    //    vector<GLfloat> mult = mat_mult(A, B);
-    //    printVector(mult, 4);
-    //
     // Initialize GLUT
     glutInit(&argc, argv);
     glutInitDisplayMode(GLUT_RGB | GLUT_DOUBLE | GLUT_DEPTH);
