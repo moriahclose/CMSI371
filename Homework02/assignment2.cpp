@@ -5,7 +5,7 @@
  
  Collaborators: Moini, Donovan
  
- Project Summary: First, the initial cartesian coordinates of the cube are converted to homogeneous coordinates. Next, the homogeneous coordinates are multiplied by the rotation matrix about x. These points are then multiplied by the rotation matrix about y, and the same is done for these points about z. This allows the cube to rotate in a helix like fashion. Then the final set of points are converted back to certesian coordinates and drawn with OpenGL.
+ Project Summary: First, the initial cartesian coordinates of the cube are converted to homogeneous coordinates. Next, the homogeneous coordinates are multiplied by the rotation matrix about x. These points are then multiplied by the rotation matrix about y, and the same is done for these points about z. This allows the cube to rotate in a helix like fashion, rotating about all 3 axes. Then the final set of points are converted back to certesian coordinates and drawn with OpenGL.
  ***/
 
 #pragma GCC diagnostic ignored "-Wdeprecated-declarations"
