@@ -7,6 +7,9 @@
  
  Project Summary: A short paragraph (3-4 sentences) describing the work you
  did for the project.
+
+ To run:
+ g++ -o assignment3 assignment3.cpp -std=c++14 -lGL -lGLU -lglut && ./   assignment3
  ***/
 
 
@@ -184,8 +187,26 @@ vector<GLfloat> mat_mult(vector<GLfloat> A, vector<GLfloat> B) {
 // Builds a unit cube centered at the origin
 vector<GLfloat> build_cube() {
     vector<GLfloat> result;
+    vector<GLfloat> plane = to_homogeneous_coord(init_plane());
     
-    // TODO: Creates a unit cube by transforming a set of planes
+    vector<GLfloat> front = mat_mult(translation_matrix(0.0,0.0,0.5), plane);
+    vector<GLfloat> left = mat_mult(rotation_matrix_y(deg2rad(-90)), plane);
+    left = mat_mult(translation_matrix(-0.5,0.0,0.0), left);
+    vector<GLfloat> right = mat_mult(rotation_matrix_y(deg2rad(90)), plane);
+    right = mat_mult(translation_matrix(0.5,0.0,0.0), right);
+    vector<GLfloat> back = mat_mult(rotation_matrix_y(deg2rad(180)), plane);
+    back = mat_mult(translation_matrix(0.0,0.0,-0.5), back);
+    vector<GLfloat> top = mat_mult(rotation_matrix_x(deg2rad(-90)), plane);
+    top = mat_mult(translation_matrix(0.0,0.5,0.0), top);
+    vector<GLfloat> bottom = mat_mult(rotation_matrix_x(deg2rad(90)), plane);
+    bottom = mat_mult(translation_matrix(0.0,-0.5,0.0), bottom);
+
+    result = front;
+    result.insert(result.end(), left.begin(), left.end());
+    result.insert(result.end(), right.begin(), right.end());
+    result.insert(result.end(), back.begin(), back.end());
+    result.insert(result.end(), top.begin(), top.end());
+    result.insert(result.end(), bottom.begin(), bottom.end());
     
     return result;
 }
@@ -229,7 +250,7 @@ gluLookAt(2.0, 6.0, 5.0, 0.0, 0.0, 0.0, 0.0, 1.0, 0.0);
 // Construct the scene using objects built from cubes/prisms
 vector<GLfloat> init_scene() {
     vector<GLfloat> scene;
-    
+    scene = to_cartesian_coord(build_cube());
     // TODO: Build your scene here
     
     return scene;
@@ -282,7 +303,7 @@ int main (int argc, char **argv) {
     glutInitDisplayMode(GLUT_RGB | GLUT_DOUBLE | GLUT_DEPTH);
     glutInitWindowSize(800, 600);
     // Create a window with rendering context and everything else we need
-    glutCreateWindow("Assignment 3");
+    glutCreateWindow("Moriah Assignment 3");
     
     setup();
     init_camera();
