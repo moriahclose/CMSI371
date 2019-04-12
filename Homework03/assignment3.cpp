@@ -268,14 +268,16 @@ vector<GLfloat> init_scene() {
     //TODO: Add markers
 
 
-    vector<GLfloat> desk_leg_right = mat_mult(scaling_matrix(0.04, 0.8, 0.6), build_cube());
-    desk_leg_right = mat_mult(translation_matrix(0.4, 0.0, 0.0), desk_leg_right);
+    //desk
+    vector<GLfloat> desk_leg_right = mat_mult(scaling_matrix(0.08, 1.6, 1.2), build_cube());
+    desk_leg_right = mat_mult(translation_matrix(-0.2, -1.2, -1.4), desk_leg_right);
 
-    vector<GLfloat> desk_leg_left = mat_mult(scaling_matrix(0.04, 0.8, 0.6), build_cube());
-    desk_leg_left = mat_mult(translation_matrix(-0.4, 0.0, 0.0), desk_leg_left);
+    vector<GLfloat> desk_leg_left = mat_mult(scaling_matrix(0.08, 1.6, 1.2), build_cube());
+    desk_leg_left = mat_mult(translation_matrix(-1.80, -1.2, -1.4), desk_leg_left);
 
-    vector<GLfloat> desk_top = mat_mult(scaling_matrix(0.8, 0.04, 0.6), build_cube());
-    desk_top = mat_mult(translation_matrix(0.0, 0.4, 0.0), desk_top);
+    vector<GLfloat> desk_top = mat_mult(scaling_matrix(1.6, 0.08, 1.2), build_cube());
+    desk_top = mat_mult(translation_matrix(-1.0, -0.4, -1.4), desk_top);
+
     scene = back_wall;
     scene.insert(scene.end(), left_wall.begin(), left_wall.end());
     scene.insert(scene.end(), floor.begin(), floor.end());
@@ -283,9 +285,9 @@ vector<GLfloat> init_scene() {
     scene.insert(scene.end(), board_border.begin(), board_border.end());
     scene.insert(scene.end(), board.begin(), board.end());
 
-    //scene = desk_leg_right;
-    //scene.insert(scene.end(), desk_leg_left.begin(), desk_leg_left.end());
-    //scene.insert(scene.end(), desk_top.begin(), desk_top.end());
+    scene.insert(scene.end(), desk_leg_right.begin(), desk_leg_right.end());
+    scene.insert(scene.end(), desk_leg_left.begin(), desk_leg_left.end());
+    scene.insert(scene.end(), desk_top.begin(), desk_top.end());
     scene = to_cartesian_coord(scene);
     return scene;
 }
@@ -335,7 +337,7 @@ void display_func() {
 }
 
 void idle_func() {
-    THETA = 0.03;
+    THETA = -0.03;
     display_func();
 }
 
