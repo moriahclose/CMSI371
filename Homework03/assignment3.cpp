@@ -241,7 +241,7 @@ void init_camera() {
     // Define a 50 degree field of view, 1:1 aspect ratio, near and far planes at 3 and 7
     gluPerspective(50.0, 1.0, 2.0, 10.0);
     // Position camera at (2, 3, 5), attention at (0, 0, 0), up at (0, 1, 0)
-gluLookAt(2.0, 3.0, 5.0, 0.0, 0.0, 0.0, 0.0, 1.0, 0.0);
+    gluLookAt(2.0, 3.0, 5.0, 0.0, 0.0, 0.0, 0.0, 1.0, 0.0);
     
 }
 
@@ -249,19 +249,24 @@ gluLookAt(2.0, 3.0, 5.0, 0.0, 0.0, 0.0, 0.0, 1.0, 0.0);
 vector<GLfloat> init_scene() {
     vector<GLfloat> scene;
 
-    vector<GLfloat> back_wall = mat_mult(scaling_matrix(1.0, 1.0, 0.1), build_cube());
-    back_wall = mat_mult(translation_matrix(0.0, 0.0, -0.5), back_wall);
+    //walls
+    vector<GLfloat> back_wall = mat_mult(scaling_matrix(4.0, 4.0, 0.1), build_cube());
+    back_wall = mat_mult(translation_matrix(0.0, 0.0, -2.0), back_wall);
 
-    vector<GLfloat> left_wall = mat_mult(scaling_matrix(0.1, 1.0, 1.0), build_cube());
-    left_wall = mat_mult(translation_matrix(-0.45, 0.0, 0.05), left_wall);
+    vector<GLfloat> left_wall = mat_mult(scaling_matrix(0.1, 4.0, 3.95), build_cube());
+    left_wall = mat_mult(translation_matrix(-2.0, 0.0, 0.0), left_wall);
 
-    vector<GLfloat> floor = mat_mult(scaling_matrix(1.0, 0.1, 1.0), build_cube());
-    floor = mat_mult(translation_matrix(0.0, -0.55, 0.0), floor);
+    vector<GLfloat> floor = mat_mult(scaling_matrix(4.0, 0.1, 4.0), build_cube());
+    floor = mat_mult(translation_matrix(0.0, -2.0, 0.0), floor);
 
-    vector<GLfloat> board_border = mat_mult(scaling_matrix(0.8, 0.5, 0.01), build_cube());
-    vector<GLfloat> board = mat_mult(translation_matrix(0.0, 0.0, 0.5), build_cube());
-    board = mat_mult(scaling_matrix(0.75, 0.45, 0.01), board);
+    //white board
+    vector<GLfloat> board_border = mat_mult(scaling_matrix(3.2, 2.0, 0.04), build_cube());
+    board_border = mat_mult(translation_matrix(0.0, 0.98, -1.94), board_border);
+    
+    vector<GLfloat> board = mat_mult(scaling_matrix(3.0, 1.8, 0.04), build_cube());
+    board = mat_mult(translation_matrix(0.0, 0.98, -1.90), board);
     //TODO: Add markers
+
 
     vector<GLfloat> desk_leg_right = mat_mult(scaling_matrix(0.04, 0.8, 0.6), build_cube());
     desk_leg_right = mat_mult(translation_matrix(0.4, 0.0, 0.0), desk_leg_right);
@@ -271,16 +276,16 @@ vector<GLfloat> init_scene() {
 
     vector<GLfloat> desk_top = mat_mult(scaling_matrix(0.8, 0.04, 0.6), build_cube());
     desk_top = mat_mult(translation_matrix(0.0, 0.4, 0.0), desk_top);
-    //scene = back_wall;
-    //scene.insert(scene.end(), left_wall.begin(), left_wall.end());
-    //scene.insert(scene.end(), floor.begin(), floor.end());
+    scene = back_wall;
+    scene.insert(scene.end(), left_wall.begin(), left_wall.end());
+    scene.insert(scene.end(), floor.begin(), floor.end());
 
-    //scene = board_border;
-    //scene.insert(scene.end(), board.begin(), board.end());
+    scene.insert(scene.end(), board_border.begin(), board_border.end());
+    scene.insert(scene.end(), board.begin(), board.end());
 
-    scene = desk_leg_right;
-    scene.insert(scene.end(), desk_leg_left.begin(), desk_leg_left.end());
-    scene.insert(scene.end(), desk_top.begin(), desk_top.end());
+    //scene = desk_leg_right;
+    //scene.insert(scene.end(), desk_leg_left.begin(), desk_leg_left.end());
+    //scene.insert(scene.end(), desk_top.begin(), desk_top.end());
     scene = to_cartesian_coord(scene);
     return scene;
 }
