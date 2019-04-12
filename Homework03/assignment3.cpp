@@ -249,38 +249,38 @@ gluLookAt(2.0, 3.0, 5.0, 0.0, 0.0, 0.0, 0.0, 1.0, 0.0);
 vector<GLfloat> init_scene() {
     vector<GLfloat> scene;
 
-    vector<GLfloat> monitor = build_cube();
-    monitor = mat_mult(scaling_matrix(1.5, 1.0, 0.05), monitor);
-    monitor = mat_mult(rotation_matrix_x(deg2rad(-10)), monitor);
-    monitor = mat_mult(translation_matrix(0.0, 0.0, -0.2), monitor);
+    vector<GLfloat> back_wall = mat_mult(scaling_matrix(1.0, 1.0, 0.1), build_cube());
+    back_wall = mat_mult(translation_matrix(0.0, 0.0, -0.5), back_wall);
 
-    vector<GLfloat> monitor_stand = build_cube();
-    monitor_stand = mat_mult(scaling_matrix(0.25, 1.0, 0.1), monitor_stand);
-    monitor_stand = mat_mult(translation_matrix(0.0, -0.5, -0.25), monitor_stand);
+    vector<GLfloat> left_wall = mat_mult(scaling_matrix(0.1, 1.0, 1.0), build_cube());
+    left_wall = mat_mult(translation_matrix(-0.45, 0.0, 0.05), left_wall);
 
-    vector<GLfloat> monitor_bottom = build_cube();
-    monitor_bottom = mat_mult(scaling_matrix(0.5, 0.1, 0.5), monitor_bottom);
-    monitor_bottom = mat_mult(translation_matrix(0.0, -1.0, -0.25), monitor_bottom);
+    vector<GLfloat> floor = mat_mult(scaling_matrix(1.0, 0.1, 1.0), build_cube());
+    floor = mat_mult(translation_matrix(0.0, -0.55, 0.0), floor);
 
-    vector<GLfloat> ipad = build_cube();
-    ipad = mat_mult(scaling_matrix(1.0, 0.1, 1.5), ipad);
-    ipad = mat_mult(translation_matrix(-1.0, -2.6, 2.0), ipad);
+    vector<GLfloat> board_border = mat_mult(scaling_matrix(0.8, 0.5, 0.01), build_cube());
+    vector<GLfloat> board = mat_mult(translation_matrix(0.0, 0.0, 0.5), build_cube());
+    board = mat_mult(scaling_matrix(0.75, 0.45, 0.01), board);
+    //TODO: Add markers
 
-    vector<GLfloat> desk = build_cube();
-    desk = mat_mult(scaling_matrix(7.0, 0.5, 5.0), desk);
-    desk = mat_mult(translation_matrix(0.0, -3.0, 1.0), desk);
+    vector<GLfloat> desk_leg_right = mat_mult(scaling_matrix(0.04, 0.8, 0.6), build_cube());
+    desk_leg_right = mat_mult(translation_matrix(0.4, 0.0, 0.0), desk_leg_right);
 
-    vector<GLfloat> desk_leg_left = build_cube();
-    desk_leg_left = mat_mult(scaling_matrix(7.0, 0.5, 5.0), desk_leg_left);
-    desk_leg_left = mat_mult(rotation_matrix_x(deg2rad(-90)), desk_leg_left);
-    desk_leg_left = mat_mult(translation_matrix(0.0, -5.0, -1.0), desk_leg_left);
+    vector<GLfloat> desk_leg_left = mat_mult(scaling_matrix(0.04, 0.8, 0.6), build_cube());
+    desk_leg_left = mat_mult(translation_matrix(-0.4, 0.0, 0.0), desk_leg_left);
 
-    scene = monitor;
-    scene.insert(scene.end(), monitor_stand.begin(), monitor_stand.end());
-    scene.insert(scene.end(), monitor_bottom.begin(), monitor_bottom.end());
-    scene.insert(scene.end(), ipad.begin(), ipad.end());
-    scene.insert(scene.end(), desk.begin(), desk.end());
+    vector<GLfloat> desk_top = mat_mult(scaling_matrix(0.8, 0.04, 0.6), build_cube());
+    desk_top = mat_mult(translation_matrix(0.0, 0.4, 0.0), desk_top);
+    //scene = back_wall;
+    //scene.insert(scene.end(), left_wall.begin(), left_wall.end());
+    //scene.insert(scene.end(), floor.begin(), floor.end());
+
+    //scene = board_border;
+    //scene.insert(scene.end(), board.begin(), board.end());
+
+    scene = desk_leg_right;
     scene.insert(scene.end(), desk_leg_left.begin(), desk_leg_left.end());
+    scene.insert(scene.end(), desk_top.begin(), desk_top.end());
     scene = to_cartesian_coord(scene);
     return scene;
 }
@@ -303,7 +303,7 @@ void display_func() {
     vector<GLfloat> rotate_y = rotation_matrix_y(deg2rad(THETA));
     //vector<GLfloat> rotate_z = rotation_matrix_z(deg2rad(THETA));
 
-   // vector<GLfloat> rotated_points_x = mat_mult(rotate_x, homogeneous_points);
+    //vector<GLfloat> rotated_points_x = mat_mult(rotate_x, homogeneous_points);
     vector<GLfloat> rotated_points_y = mat_mult(rotate_y, homogeneous_points);
     //vector<GLfloat> rotated_points_z = mat_mult(rotate_z, rotated_points_y);
     SCENE = to_cartesian_coord(rotated_points_y);
@@ -323,7 +323,7 @@ void display_func() {
                    color_vertices);     // Pointer to memory location to read from
     
     // Draw quad point planes: each 4 vertices
-    glDrawArrays(GL_QUADS, 0, 4 * 18);
+    glDrawArrays(GL_QUADS, 0, 4 * SCENE.size()/12);
     
     glFlush();			//Finish rendering
     glutSwapBuffers();
