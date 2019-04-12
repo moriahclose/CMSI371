@@ -2,11 +2,8 @@
  Assignment-3: Geometric Modeling of a Scene
  
  Name: Tolliver, Moriah 
-
- Collaborators: 
  
- Project Summary: A short paragraph (3-4 sentences) describing the work you
- did for the project.
+ Project Summary: First, I created the build_cube() function to create a unit cube cetnered at (0,0,0). Then, I transformed the cube to make different shapes within the scene. The resulting scene is an office space located in Seaver rotating about the y-axis.
 
  To run:
  g++ -o assignment3 assignment3.cpp -std=c++14 -lGL -lGLU -lglut && ./   assignment3
@@ -165,7 +162,7 @@ vector<GLfloat> rotation_matrix_z (float theta) {
 // Perform matrix multiplication for A B
 vector<GLfloat> mat_mult(vector<GLfloat> A, vector<GLfloat> B) {
     vector<GLfloat> result;
-    // TODO: Compute matrix multiplication of A B
+
     for (int b = 0; b < B.size()/4; b++) {
         for (int a = 0; a < 4; a++) {
             float element_wise_sum = 0.0;
@@ -265,8 +262,6 @@ vector<GLfloat> init_scene() {
     
     vector<GLfloat> board = mat_mult(scaling_matrix(3.0, 1.8, 0.04), build_cube());
     board = mat_mult(translation_matrix(0.0, 0.98, -1.90), board);
-    //TODO: Add markers
-
 
     //desk
     vector<GLfloat> desk_leg_right = mat_mult(scaling_matrix(0.08, 1.6, 1.2), build_cube());
@@ -351,15 +346,11 @@ vector<GLfloat> init_color(vector<GLfloat> scene) {
 void display_func() {
     glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
     
-    // TODO: Rotate the scene using the scene vector
     vector<GLfloat> homogeneous_points = to_homogeneous_coord(SCENE);
-    //vector<GLfloat> rotate_x = rotation_matrix_x(deg2rad(THETA));
     vector<GLfloat> rotate_y = rotation_matrix_y(deg2rad(THETA));
-    //vector<GLfloat> rotate_z = rotation_matrix_z(deg2rad(THETA));
 
-    //vector<GLfloat> rotated_points_x = mat_mult(rotate_x, homogeneous_points);
     vector<GLfloat> rotated_points_y = mat_mult(rotate_y, homogeneous_points);
-    //vector<GLfloat> rotated_points_z = mat_mult(rotate_z, rotated_points_y);
+
     SCENE = to_cartesian_coord(rotated_points_y);
     
     GLfloat* scene_vertices = vector2array(SCENE);
@@ -414,4 +405,3 @@ int main (int argc, char **argv) {
     
     return 0;
 }
-
