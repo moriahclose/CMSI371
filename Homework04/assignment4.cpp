@@ -235,11 +235,12 @@ vector<GLfloat> build_cube() {
  *                                                *
  *************************************************/
 
-// Generates the normals to each surface (plane)
+// Generates the normals to each surface (plane) given cartesian set of points
 vector<GLfloat> generate_normals(vector<GLfloat> points) {
     vector<GLfloat> normals;
     
     // TODO: generates the normals to each surface
+
     
     // Note: each plane (quad) contains 4 points, choose the points
     // to generate your vectors such that the normals (given by the
@@ -248,11 +249,14 @@ vector<GLfloat> generate_normals(vector<GLfloat> points) {
     return normals;
 }
 
-// Performs the cross product between two vectors
+// Performs the cross product between two vectors in cartesian coordinates
 vector<GLfloat> cross_product(vector<GLfloat> A, vector<GLfloat> B) {
     vector<GLfloat> C;
     
-    // TODO: performs the cross product between two vectors
+	C[0] = A[1]*B[2] - A[2]*B[1];
+	C[1] = A[2]*B[0] - A[0]*B[2];
+	C[2] = A[0]*B[1] - A[1]*B[0];
+	
     
     return C;
 }
