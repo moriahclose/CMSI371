@@ -1,7 +1,7 @@
 /***
 Assignment-4: Shading via Illumination and Colors
 
-Name: Wong, Alex (Please write your name in Last Name, First Name format)
+Name: Tolliver, Moriah
 
 Collaborators: Doe, John; Doe, Jane
 ** Note: although the assignment should be completed individually
@@ -343,38 +343,177 @@ void init_camera() {
     // Camera parameters
     glMatrixMode(GL_PROJECTION);
     glLoadIdentity();
-    
-    // TODO: Setup your camera here
+    // Define a 50 degree field of view, 1:1 aspect ratio, near and far planes at 3 and 7
+    gluPerspective(50.0, 1.0, 2.0, 10.0);
+    // Position camera at (2, 3, 5), attention at (0, 0, 0), up at (0, 1, 0)
+    gluLookAt(2.0, 3.0, 5.0, 0.0, 0.0, 0.0, 0.0, 1.0, 0.0);
     
 }
+
+/**************************************************
+ *            Build Objects in Scene              *
+ *                                                *
+ *  methods that build furniture, decorations     *
+ *  and other elements that appear in the scene   *
+ *                                                *
+ *************************************************/
+
+// Walls that construct room
+vector<GLfloat> build_room() {
+	vector<GLfloat> room;
+
+	vector<GLfloat> back_wall = mat_mult(scaling_matrix(4.0, 4.0, 0.1), build_cube());
+    back_wall = mat_mult(translation_matrix(0.0, 0.0, -2.0), back_wall);
+
+    vector<GLfloat> left_wall = mat_mult(scaling_matrix(0.1, 4.0, 3.95), build_cube());
+    left_wall = mat_mult(translation_matrix(-2.0, 0.0, 0.0), left_wall);
+
+    vector<GLfloat> floor = mat_mult(scaling_matrix(4.0, 0.1, 4.0), build_cube());
+    floor = mat_mult(translation_matrix(0.0, -2.0, 0.0), floor);
+
+	room = back_wall;
+    room.insert(room.end(), left_wall.begin(), left_wall.end());
+    
+    room.insert(room.end(), floor.begin(), floor.end());
+
+	return room;
+}
+
+// Construct desk
+vector<GLfloat> build_desk() {
+	vector<GLfloat> desk;
+
+	vector<GLfloat> desk_leg_right = mat_mult(scaling_matrix(0.08, 1.6, 1.2), build_cube());
+    desk_leg_right = mat_mult(translation_matrix(-0.2, -1.2, -1.4), desk_leg_right);
+
+    vector<GLfloat> desk_leg_left = mat_mult(scaling_matrix(0.08, 1.6, 1.2), build_cube());
+    desk_leg_left = mat_mult(translation_matrix(-1.80, -1.2, -1.4), desk_leg_left);
+
+    vector<GLfloat> desk_top = mat_mult(scaling_matrix(1.6, 0.08, 1.2), build_cube());
+    desk_top = mat_mult(translation_matrix(-1.0, -0.4, -1.4), desk_top);
+
+    desk = desk_leg_right;
+    desk.insert(desk.end(), desk_leg_left.begin(), desk_leg_left.end());
+    desk.insert(desk.end(), desk_top.begin(), desk_top.end());
+
+    return desk;
+}
+
+
+// Construct whiteboard
+vector<GLfloat> build_whiteboard() {
+	vector<GLfloat> whiteboard;
+
+	vector<GLfloat> board_border = mat_mult(scaling_matrix(3.2, 2.0, 0.04), build_cube());
+    board_border = mat_mult(translation_matrix(0.0, 0.98, -1.94), board_border);
+    
+    vector<GLfloat> board = mat_mult(scaling_matrix(3.0, 1.8, 0.04), build_cube());
+    board = mat_mult(translation_matrix(0.0, 0.98, -1.90), board);
+
+	whiteboard = board_border;
+	whiteboard.insert(whiteboard.end(), board.begin(), board.end());
+	
+	return whiteboard;
+}
+
+
+// Construct monitor
+vector<GLfloat> build_monitor() {
+	vector<GLfloat> return_monitor;
+
+	vector<GLfloat> monitor = mat_mult(scaling_matrix(0.8, 0.6, 0.02), build_cube());
+    monitor = mat_mult(rotation_matrix_x(deg2rad(-10)), monitor);
+    monitor = mat_mult(translation_matrix(-1.2, 0.3, -1.4), monitor);
+
+    vector<GLfloat> stand = mat_mult(scaling_matrix(0.15, 0.4, 0.05), build_cube());
+    stand = mat_mult(translation_matrix(-1.2, 0.0, -1.4), stand);
+
+    vector<GLfloat> monitor_bottom = mat_mult(scaling_matrix(0.3, 0.04, 0.3), build_cube());
+    monitor_bottom = mat_mult(translation_matrix(-1.2, -0.2, -1.4), monitor_bottom);
+
+	return_monitor = monitor;
+	return_monitor.insert(return_monitor.end(), stand.begin(), stand.end());
+    	return_monitor.insert(return_monitor.end(), monitor_bottom.begin(), monitor_bottom.end());
+
+	return return_monitor;
+}
+
+// Construct chair
+vector<GLfloat> build_chair() {
+	vector<GLfloat> chair;
+
+	 vector<GLfloat> chair_back = mat_mult(scaling_matrix(0.6, 1.2, 0.09), build_cube());
+    chair_back = mat_mult(translation_matrix(-1.0, -0.6, 0.0), chair_back);
+
+    vector<GLfloat> chair_bottom = mat_mult(scaling_matrix(0.6, 0.09, 0.6), build_cube());
+    chair_bottom = mat_mult(translation_matrix(-1.0, -1.2, -0.3), chair_bottom);
+
+    vector<GLfloat> chair_stand = mat_mult(scaling_matrix(0.075, 1.0, 0.075), build_cube());
+    chair_stand = mat_mult(translation_matrix(-1.0, -1.68, -0.2), chair_stand); 
+
+    vector<GLfloat> chair_leg_back = mat_mult(scaling_matrix(0.075, 0.075, 0.6), build_cube());
+    chair_leg_back = mat_mult(translation_matrix(-1.0, -1.9, -0.4), chair_leg_back);
+
+    vector<GLfloat> chair_leg_right = mat_mult(scaling_matrix(0.6, 0.075, 0.075), build_cube());
+    chair_leg_right = mat_mult(translation_matrix(-0.8, -1.9, -0.2), chair_leg_right);
+
+    vector<GLfloat> chair_leg_front = mat_mult(scaling_matrix(0.075, 0.075, 0.6), build_cube());
+    chair_leg_front = mat_mult(translation_matrix(-1.0, -1.9, 0.0), chair_leg_front);
+
+    vector<GLfloat> chair_leg_left = mat_mult(scaling_matrix(0.6, 0.075, 0.075), build_cube());
+    chair_leg_left = mat_mult(translation_matrix(-1.2, -1.9, -0.2), chair_leg_left);
+
+	chair =  chair_back;
+    chair.insert(chair.end(), chair_bottom.begin(), chair_bottom.end());
+    chair.insert(chair.end(), chair_stand.begin(), chair_stand.end());
+    chair.insert(chair.end(), chair_leg_back.begin(), chair_leg_back.end());
+    chair.insert(chair.end(), chair_leg_right.begin(), chair_leg_right.end());
+    chair.insert(chair.end(), chair_leg_left.begin(), chair_leg_left.end());
+    chair.insert(chair.end(), chair_leg_front.begin(), chair_leg_front.end());
+
+	return chair;
+}
+	
 
 // Construct the scene using objects built from cubes/prisms
 vector<GLfloat> init_scene() {
     vector<GLfloat> scene;
     
     // TODO: Build your scene here
-    
+	scene = build_room();
+
+	vector<GLfloat> whiteboard = build_whiteboard();
+	vector<GLfloat> desk = build_desk();
+	vector<GLfloat> monitor = build_monitor();
+	vector<GLfloat>	chair = build_chair();
+
+	scene.insert(scene.end(), whiteboard.begin(), whiteboard.end());
+	scene.insert(scene.end(), desk.begin(), desk.end());
+	scene.insert(scene.end(), monitor.begin(), monitor.end());
+	scene.insert(scene.end(), chair.begin(), chair.end());
+
+	scene = to_cartesian_coord(scene);    
     return scene;
 }
 
 // Construct the color mapping of the scene
 vector<GLfloat> init_color() {
     vector<GLfloat> colors;
+
     
     // TODO: Construct the base colors of the scene
     
     return colors;
 }
 
-
 void display_func() {
     glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
     
-    // TODO: Apply shading to the scene
+     //TODO: Apply shading to the scene
     
     
-    // TODO: Rotate the scene using the rotation matrix
-    
+     //TODO: Rotate the scene using the rotation matrix
+   
     
     GLfloat* scene_vertices = vector2array(SCENE.get_points());
     GLfloat* color_vertices = vector2array(SCENE.get_colors());
