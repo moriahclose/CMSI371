@@ -235,32 +235,32 @@ vector<GLfloat> build_cube() {
  *                                                *
  *************************************************/
 
-// Generates the normals to each surface (plane) given cartesian set of points
-vector<GLfloat> generate_normals(vector<GLfloat> points) {
-    vector<GLfloat> normals;
-    
-    // TODO: generates the normals to each surface
-
-    
-    // Note: each plane (quad) contains 4 points, choose the points
-    // to generate your vectors such that the normals (given by the
-    // cross product, point to the correct direction
-    
-    return normals;
-}
-
 // Performs the cross product between two vectors in cartesian coordinates
 vector<GLfloat> cross_product(vector<GLfloat> A, vector<GLfloat> B) {
     vector<GLfloat> C;
     
-	C[0] = A[1]*B[2] - A[2]*B[1];
-	C[1] = A[2]*B[0] - A[0]*B[2];
-	C[2] = A[0]*B[1] - A[1]*B[0];
+	C[0] = A[1]*B[2] - A[2]*B[1]; //assign x
+	C[1] = A[2]*B[0] - A[0]*B[2]; //assign y
+	C[2] = A[0]*B[1] - A[1]*B[0]; //assign z
 	
     
     return C;
 }
 
+// Generates the normals to each surface (plane) given cartesian set of points
+vector<GLfloat> generate_normals(vector<GLfloat> points) {
+    vector<GLfloat> normals;
+    
+    vector<GLfloat> a = { points[0] - points[9], 
+			  points[1] - points[10],
+			  points[2] - points[11] };
+
+    vector<GLfloat> b = { points[6] - points[9],
+			  points[7] - points[10],
+			  points[8] - points[11] };
+    
+    return cross_product(a, b);
+}
 
 /**************************************************
  *       Shading via Illumination and Color       *
@@ -276,9 +276,7 @@ vector<GLfloat> cross_product(vector<GLfloat> A, vector<GLfloat> B) {
 // Performs the dot product between two vectors
 GLfloat dot_product(vector<GLfloat> A, vector<GLfloat> B) {
     
-    // TODO: perform the dot product between two vectors
-    
-    return 0.0;
+    return (A[0]*B[0]) + (A[1]*B[1]) + (A[2]*B[2]);
 }
 
 // Initializes the base color of a plane to a single color
