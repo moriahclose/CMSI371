@@ -352,9 +352,9 @@ ObjectModel apply_shading(ObjectModel object_model, vector<GLfloat> light_source
 
         h = normalize(h);
 
-        GLfloat I_r = base_color[i*3 + 0] * (amb[0] + diff[0] * dot_product(curr_normal, light) + spec[0] * pow(dot_product(curr_normal, h), gloss );
-        GLfloat I_g = base_color[i*3 + 1] * (amb[1] + diff[1] * dot_product(curr_normal, light) + spec[1] * pow(dot_product(curr_normal, h), gloss );
-        GLfloat I_b = base_color[i*3 + 2] * (amb[2] + diff[2] * dot_product(curr_normal, light) + spec[2] * pow(dot_product(curr_normal, h), gloss );
+        GLfloat I_r = base_color[i*3 + 0] * (amb[0] + diff[0] * dot_product(curr_normal, light) + spec[0] * pow(dot_product(curr_normal, h), gloss ) );
+        GLfloat I_g = base_color[i*3 + 1] * (amb[1] + diff[1] * dot_product(curr_normal, light) + spec[1] * pow(dot_product(curr_normal, h), gloss ) );
+        GLfloat I_b = base_color[i*3 + 2] * (amb[2] + diff[2] * dot_product(curr_normal, light) + spec[2] * pow(dot_product(curr_normal, h), gloss ) );
 
         colors.push_back(I_r);
         colors.push_back(I_g);
@@ -532,7 +532,6 @@ vector<GLfloat> build_chair() {
 vector<GLfloat> init_scene() {
     vector<GLfloat> scene;
 
-    // TODO: Build your scene here
 	scene = build_room();
 
 	vector<GLfloat> whiteboard = build_whiteboard();
@@ -553,8 +552,11 @@ vector<GLfloat> init_scene() {
 vector<GLfloat> init_color() {
     vector<GLfloat> colors;
 
+    ObjectModel room = new ObjectModel();
+    room.set_points(build_room());
+    room.set_base_colors({1,0,0});
 
-    // TODO: Construct the base colors of the scene
+    colors.push_back( room.get_base_colors() );
 
     return colors;
 }
