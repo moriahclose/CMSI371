@@ -183,7 +183,7 @@ vector<GLfloat> rotation_matrix_z (float theta) {
 // Perform matrix multiplication for A B
 vector<GLfloat> mat_mult(vector<GLfloat> A, vector<GLfloat> B) {
     vector<GLfloat> result;
-    
+
     for (int b = 0; b < B.size()/4; b++) {
         for (int a = 0; a < 4; a++) {
             float element_wise_sum = 0.0;
@@ -212,14 +212,14 @@ vector<GLfloat> build_cube() {
     vector<GLfloat> a4 = mat_mult(translation_matrix(0.5,  0.0,  0.0), mat_mult(rotation_matrix_y(deg2rad(90)), a0));
     vector<GLfloat> a5 = mat_mult(translation_matrix(0.0,  0.5,  0.0), mat_mult(rotation_matrix_x(deg2rad(-90)), a0));
     vector<GLfloat> a6 = mat_mult(translation_matrix(0.0, -0.5,  0.0), mat_mult(rotation_matrix_x(deg2rad(90)), a0));
-    
+
     result.insert(std::end(result), std::begin(a1), std::end(a1));
     result.insert(std::end(result), std::begin(a2), std::end(a2));
     result.insert(std::end(result), std::begin(a3), std::end(a3));
     result.insert(std::end(result), std::begin(a4), std::end(a4));
     result.insert(std::end(result), std::begin(a5), std::end(a5));
     result.insert(std::end(result), std::begin(a6), std::end(a6));
-    
+
     return result;
 }
 
@@ -238,27 +238,27 @@ vector<GLfloat> build_cube() {
 // Performs the cross product between two vectors in cartesian coordinates
 vector<GLfloat> cross_product(vector<GLfloat> A, vector<GLfloat> B) {
     vector<GLfloat> C;
-    
+
 	C[0] = A[1]*B[2] - A[2]*B[1]; //assign x
 	C[1] = A[2]*B[0] - A[0]*B[2]; //assign y
 	C[2] = A[0]*B[1] - A[1]*B[0]; //assign z
-	
-    
+
+
     return C;
 }
 
 // Generates the normals to each surface (plane) given cartesian set of points
 vector<GLfloat> generate_normals(vector<GLfloat> points) {
     vector<GLfloat> normals;
-    
-    vector<GLfloat> a = { points[0] - points[9], 
+
+    vector<GLfloat> a = { points[0] - points[9],
 			  points[1] - points[10],
 			  points[2] - points[11] };
 
     vector<GLfloat> b = { points[6] - points[9],
 			  points[7] - points[10],
 			  points[8] - points[11] };
-    
+
     return cross_product(a, b);
 }
 
@@ -275,7 +275,7 @@ vector<GLfloat> generate_normals(vector<GLfloat> points) {
 
 // Performs the dot product between two vectors
 GLfloat dot_product(vector<GLfloat> A, vector<GLfloat> B) {
-    
+
     return (A[0]*B[0]) + (A[1]*B[1]) + (A[2]*B[2]);
 }
 
@@ -303,14 +303,47 @@ vector<GLfloat> init_base_color(GLfloat r0, GLfloat g0, GLfloat b0, GLfloat r1, 
     return base_color;
 }
 
+// Normalizes a given vector
+vector<GLfloat> normalize(vector<GLfloat> a) {
+    GLfloat magnitude = Math.sqrt((a[0] ** 2) + (a[1] ** 2) + (a[2] ** 2));
+
+    for (int i = 0; i < a.size(); i++) {
+        a[i] = a[i] / magnitude;
+    }
+
+    return a;
+}
+
+// Calculates h for light_source (a vector of 3 values) and viewer (a vector of 3 values)
+vector<GLfloat> get_h(vector<GLfloat> light_source, vector<GLfloat> viewer) {
+    vector<GLfloat> h;
+
+    h[0] = light_source[0] + viewer[0];
+    h[1] = light_source[1] + viewer[1];
+    h[2] = light_source[2] + viewer[2];
+
+    return normalize(h);
+}
+
 // Allows for ambience (a vector of 3 values), diffusion (vector of 3 values) and specular (vector of 3 values)
 // as input to the shading equation
 ObjectModel apply_shading(ObjectModel object_model, vector<GLfloat> light_source, vector<GLfloat> camera,
                           vector<GLfloat> amb, vector<GLfloat> diff, vector<GLfloat> spec) {
     vector<GLfloat> colors;
-    
-    // TODO: apply shading to objects using illumination formula for multiple light sources
-    
+
+    object_model.set_points( to_cartesian_coord(object_model.get_points()) );
+
+    for (int p = 0; p < object_model.get_points().size() / 3; p++) {
+        vector<GLfloat> normal = object_model.get
+        for (int l = 0; l < light_source.size() / 3; l++) {
+            GLfloat red = object_model.get_base_colors()[0] * ( amb[0] + diff[0] * dot_product(object_model.get_normals()) )
+        }
+
+    }
+
+
+
+    object_model.set_points( to_homogeneous_coord(object_model.get_points()) );
     object_model.set_colors(colors);
     return object_model;
 }
@@ -349,7 +382,7 @@ void init_camera() {
     gluPerspective(50.0, 1.0, 2.0, 10.0);
     // Position camera at (2, 3, 5), attention at (0, 0, 0), up at (0, 1, 0)
     gluLookAt(2.0, 3.0, 5.0, 0.0, 0.0, 0.0, 0.0, 1.0, 0.0);
-    
+
 }
 
 /**************************************************
@@ -375,7 +408,7 @@ vector<GLfloat> build_room() {
 
 	room = back_wall;
     room.insert(room.end(), left_wall.begin(), left_wall.end());
-    
+
     room.insert(room.end(), floor.begin(), floor.end());
 
 	return room;
@@ -408,13 +441,13 @@ vector<GLfloat> build_whiteboard() {
 
 	vector<GLfloat> board_border = mat_mult(scaling_matrix(3.2, 2.0, 0.04), build_cube());
     board_border = mat_mult(translation_matrix(0.0, 0.98, -1.94), board_border);
-    
+
     vector<GLfloat> board = mat_mult(scaling_matrix(3.0, 1.8, 0.04), build_cube());
     board = mat_mult(translation_matrix(0.0, 0.98, -1.90), board);
 
 	whiteboard = board_border;
 	whiteboard.insert(whiteboard.end(), board.begin(), board.end());
-	
+
 	return whiteboard;
 }
 
@@ -451,7 +484,7 @@ vector<GLfloat> build_chair() {
     chair_bottom = mat_mult(translation_matrix(-1.0, -1.2, -0.3), chair_bottom);
 
     vector<GLfloat> chair_stand = mat_mult(scaling_matrix(0.075, 1.0, 0.075), build_cube());
-    chair_stand = mat_mult(translation_matrix(-1.0, -1.68, -0.2), chair_stand); 
+    chair_stand = mat_mult(translation_matrix(-1.0, -1.68, -0.2), chair_stand);
 
     vector<GLfloat> chair_leg_back = mat_mult(scaling_matrix(0.075, 0.075, 0.6), build_cube());
     chair_leg_back = mat_mult(translation_matrix(-1.0, -1.9, -0.4), chair_leg_back);
@@ -475,12 +508,12 @@ vector<GLfloat> build_chair() {
 
 	return chair;
 }
-	
+
 
 // Construct the scene using objects built from cubes/prisms
 vector<GLfloat> init_scene() {
     vector<GLfloat> scene;
-    
+
     // TODO: Build your scene here
 	scene = build_room();
 
@@ -494,7 +527,7 @@ vector<GLfloat> init_scene() {
 	scene.insert(scene.end(), monitor.begin(), monitor.end());
 	scene.insert(scene.end(), chair.begin(), chair.end());
 
-	scene = to_cartesian_coord(scene);    
+	scene = to_cartesian_coord(scene);
     return scene;
 }
 
@@ -502,21 +535,21 @@ vector<GLfloat> init_scene() {
 vector<GLfloat> init_color() {
     vector<GLfloat> colors;
 
-    
+
     // TODO: Construct the base colors of the scene
-    
+
     return colors;
 }
 
 void display_func() {
     glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
-    
+
      //TODO: Apply shading to the scene
-    
-    
+
+
      //TODO: Rotate the scene using the rotation matrix
-   
-    
+
+
     GLfloat* scene_vertices = vector2array(SCENE.get_points());
     GLfloat* color_vertices = vector2array(SCENE.get_colors());
     // Pass the scene vertex pointer
@@ -524,19 +557,19 @@ void display_func() {
                     GL_FLOAT,         // Vertex type is GL_FLOAT
                     0,                // Start position in referenced memory
                     scene_vertices);  // Pointer to memory location to read from
-    
+
     // Pass the color vertex pointer
     glColorPointer(3,                   // 3 components (r, g, b)
                    GL_FLOAT,            // Vertex type is GL_FLOAT
                    0,                   // Start position in referenced memory
                    color_vertices);     // Pointer to memory location to read from
-    
+
     // Draw quad point planes: each 4 vertices with 3 dimensions
     glDrawArrays(GL_QUADS, 0, (int)SCENE.get_points().size() / 3);
-    
+
     glFlush();			//Finish rendering
     glutSwapBuffers();
-    
+
     // Clean up
     delete scene_vertices;
     delete color_vertices;
@@ -553,19 +586,19 @@ int main (int argc, char **argv) {
     glutInitDisplayMode(GLUT_RGB | GLUT_DOUBLE | GLUT_DEPTH);
     glutInitWindowSize(800, 600);
     // Create a window with rendering context and everything else we need
-    glutCreateWindow("Assignment 4");
-    
+    glutCreateWindow("Moriah Tolliver Assignment 4");
+
     setup();
     init_camera();
-    
+
     SCENE.set_points(init_scene());
     SCENE.set_base_colors(init_color());
-    
+
     // Set up our display function
     glutDisplayFunc(display_func);
     glutIdleFunc(idle_func);
     // Render our world
     glutMainLoop();
-    
+
     return 0;
 }
