@@ -551,18 +551,16 @@ vector<GLfloat> init_scene() {
 // Construct the color mapping of the scene
 vector<GLfloat> init_color() {
     vector<GLfloat> colors;
+    ObjectModel temp_scene;
 
-    ObjectModel room = new ObjectModel();
-    vector<GLfloat> room_base_colors;
+    temp_scene.set_points(init_scene());
+    vector<GLfloat> black = init_base_color(0,0,0);
 
-    for (int i = 0; i < 18; i++) {
-        room_base_colors.push_back(init_base_color(1, 0, 0));
+    for (int i = 0; i <  (int)SCENE.get_points().size() / 3; i++ ) {
+
+        colors.insert(colors.end(), black.begin(), black.end());
     }
 
-    room.set_points(build_room());
-    room.set_base_colors(room_base_colors);
-
-    colors.push_back( room.get_base_colors() );
 
     return colors;
 }
