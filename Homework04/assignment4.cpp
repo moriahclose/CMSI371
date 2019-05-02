@@ -331,8 +331,35 @@ ObjectModel apply_shading(ObjectModel object_model, vector<GLfloat> light_source
                           vector<GLfloat> amb, vector<GLfloat> diff, vector<GLfloat> spec) {
     vector<GLfloat> colors;
 
+    GLfloat gloss = 0.5;
+
     object_model.set_points( to_cartesian_coord(object_model.get_points()) );
 
+    for (int i = 0; i < points.size(); i++) {
+        vector<GLfloat> light = {object_model.get_points()[i*3] - light_source[0],
+                                object_model.get_points()[i*3 + 1] - light_source[1],
+                                object_model.get_points()[i*3 + 2] - light_source[2]};
+
+        light = normalize(light);
+
+        vector<GLfloat> curr_normal = {object_model.get_normals()[i*3],
+                                       object_model.get_normals()[i*3 + 1],
+                                       object_model.get_normals()[i*3 + 2]};
+
+        vector<GLfloat> h = {light[0] + camera[0],
+                             light[1] + camera[1],
+                             light[2] + camera[2]};
+
+        h = normalize(h);
+
+        GLfloat I_r = base_color[i*3 + 0] * (amb[0] + diff[0] * dot_product(curr_normal, light) + spec[0] * pow(dot_product(curr_normal, h), gloss );
+        GLfloat I_g = base_color[i*3 + 1] * (amb[1] + diff[1] * dot_product(curr_normal, light) + spec[1] * pow(dot_product(curr_normal, h), gloss );
+        GLfloat I_b = base_color[i*3 + 2] * (amb[2] + diff[2] * dot_product(curr_normal, light) + spec[2] * pow(dot_product(curr_normal, h), gloss );
+
+        colors.push_back(I_r);
+        colors.push_back(I_g);
+        colors.push_back(I_b);
+    }
 
     object_model.set_points( to_homogeneous_coord(object_model.get_points()) );
     object_model.set_colors(colors);
