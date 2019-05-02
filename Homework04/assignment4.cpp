@@ -553,8 +553,14 @@ vector<GLfloat> init_color() {
     vector<GLfloat> colors;
 
     ObjectModel room = new ObjectModel();
+    vector<GLfloat> room_base_colors;
+
+    for (int i = 0; i < 18; i++) {
+        room_base_colors.push_back(init_base_color(1, 0, 0));
+    }
+
     room.set_points(build_room());
-    room.set_base_colors({1,0,0});
+    room.set_base_colors(room_base_colors);
 
     colors.push_back( room.get_base_colors() );
 
