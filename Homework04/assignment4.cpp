@@ -305,7 +305,7 @@ vector<GLfloat> init_base_color(GLfloat r0, GLfloat g0, GLfloat b0, GLfloat r1, 
 
 // Normalizes a given vector
 vector<GLfloat> normalize(vector<GLfloat> a) {
-    GLfloat magnitude = Math.sqrt((a[0] ** 2) + (a[1] ** 2) + (a[2] ** 2));
+    GLfloat magnitude = sqrt(pow(a[0],2) + pow(a[1],2) + pow(a[2],2));
 
     for (int i = 0; i < a.size(); i++) {
         a[i] = a[i] / magnitude;
@@ -332,15 +332,6 @@ ObjectModel apply_shading(ObjectModel object_model, vector<GLfloat> light_source
     vector<GLfloat> colors;
 
     object_model.set_points( to_cartesian_coord(object_model.get_points()) );
-
-    for (int p = 0; p < object_model.get_points().size() / 3; p++) {
-        vector<GLfloat> normal = object_model.get
-        for (int l = 0; l < light_source.size() / 3; l++) {
-            GLfloat red = object_model.get_base_colors()[0] * ( amb[0] + diff[0] * dot_product(object_model.get_normals()) )
-        }
-
-    }
-
 
 
     object_model.set_points( to_homogeneous_coord(object_model.get_points()) );
