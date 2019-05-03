@@ -234,7 +234,13 @@ vector<GLfloat> build_cube() {
 
 // Normalizes a given vector
 vector<GLfloat> normalize(vector<GLfloat> a) {
-    GLfloat magnitude = sqrt(pow(a[0],2) + pow(a[1],2) + pow(a[2],2));
+    GLfloat magnitude = 0;
+
+    for (int i = 0; i < a.size(); i++) {
+	magnitude += pow(a[i],2);
+    }
+
+    magnitude = sqrt(magnitude);
 
     for (int i = 0; i < a.size(); i++) {
         a[i] = a[i] / magnitude;
@@ -248,9 +254,10 @@ vector<GLfloat> cross_product(vector<GLfloat> A, vector<GLfloat> B) {
     
     vector<GLfloat> C;
 
-	C[0] = A[1]*B[2] - A[2]*B[1]; //assign x
-	C[1] = A[2]*B[0] - A[0]*B[2]; //assign y
-	C[2] = A[0]*B[1] - A[1]*B[0]; //assign z
+
+	C.push_back(A[1]*B[2] - A[2]*B[1]); //assign x
+	C.push_back(A[2]*B[0] - A[0]*B[2]); //assign y
+	C.push_back(A[0]*B[1] - A[1]*B[0]); //assign z
 
 
     return normalize(C);
@@ -260,15 +267,20 @@ vector<GLfloat> cross_product(vector<GLfloat> A, vector<GLfloat> B) {
 vector<GLfloat> generate_normals(vector<GLfloat> points) {
     vector<GLfloat> normals;
 
-    vector<GLfloat> a = { points[0] - points[9],
-			  points[1] - points[10],
-			  points[2] - points[11] };
+    for ( int i = 0; i < points.size(); i+=16) {
 
-    vector<GLfloat> b = { points[6] - points[9],
-			  points[7] - points[10],
-			  points[8] - points[11] };
+	    vector<GLfloat> a = { points[i+0] - points[i+9],
+				  points[i+1] - points[i+10],
+				  points[i+2] - points[i+11], };
 
-    return cross_product(a, b);
+	    vector<GLfloat> b = { points[i+6] - points[i+9],
+				  points[i+7] - points[i+10],
+				  points[i+8] - points[i+11] };
+	   vector<GLfloat> add = cross_product(a, b);
+	   normals.insert(normals.end(), add.begin(), add.end() );
+   }
+
+    return normals;
 }
 
 
@@ -412,6 +424,7 @@ ObjectModel build_room() {
 
 	ObjectModel room_model;
 	room_model.set_points(room);
+	room_model.set_normals( generate_normals(room_model.get_points()) );
 
 	return room_model;
 }
