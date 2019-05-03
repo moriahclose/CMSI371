@@ -385,8 +385,10 @@ void init_camera() {
     // Camera parameters
     glMatrixMode(GL_PROJECTION);
     glLoadIdentity();
-    
-    // TODO: Setup your camera here
+    // Define a 50 degree field of view, 1:1 aspect ratio, near and far planes at 3 and 7
+    gluPerspective(50.0, 1.0, 2.0, 10.0);
+    // Position camera at (2, 3, 5), attention at (0, 0, 0), up at (0, 1, 0)
+gluLookAt(2.0, 3.0, 5.0, 0.0, 0.0, 0.0, 0.0, 1.0, 0.0);
     
 }
 
@@ -395,6 +397,8 @@ vector<GLfloat> init_scene() {
     vector<GLfloat> scene;
     
     // TODO: Build your scene here
+
+   scene = build_cube();
     
     return scene;
 }
@@ -421,7 +425,7 @@ void display_func() {
     // TODO: Rotate the scene using the rotation matrix
     
     
-    GLfloat* scene_vertices = vector2array(SCENE.get_points());
+    GLfloat* scene_vertices = vector2array(to_cartesian_coord(SCENE.get_points()));
     GLfloat* color_vertices = vector2array(SCENE.get_colors());
     // Pass the scene vertex pointer
     glVertexPointer(3,                // 3 components (x, y, z)
