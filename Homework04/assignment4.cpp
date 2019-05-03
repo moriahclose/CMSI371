@@ -332,11 +332,10 @@ ObjectModel apply_shading(ObjectModel object_model, vector<GLfloat> light_source
                           vector<GLfloat> amb, vector<GLfloat> diff, vector<GLfloat> spec, GLfloat m) {
     vector<GLfloat> colors;
 
-    GLfloat gloss = 0.5;
-
     object_model.set_points( to_cartesian_coord(object_model.get_points()) );
+    vector<GLfloat> base_colors = object_model.get_base_colors();
 
-    for (int i = 0; i < object_model.get_points().size(); i++) {
+    for (int i = 0; i < object_model.get_points().size() / 3; i++) {
         vector<GLfloat> light = {object_model.get_points()[i*3] - light_source[0],
                                 object_model.get_points()[i*3 + 1] - light_source[1],
                                 object_model.get_points()[i*3 + 2] - light_source[2]};
@@ -353,9 +352,9 @@ ObjectModel apply_shading(ObjectModel object_model, vector<GLfloat> light_source
 
         h = normalize(h);
 
-        GLfloat I_r = object_model.get_base_colors()[i*3 + 0] * (amb[0] + diff[0] * dot_product(curr_normal, light) + spec[0] * pow(dot_product(curr_normal, h), gloss ) );
-        GLfloat I_g = object_model.get_base_colors()[i*3 + 1] * (amb[1] + diff[1] * dot_product(curr_normal, light) + spec[1] * pow(dot_product(curr_normal, h), gloss ) );
-        GLfloat I_b = object_model.get_base_colors()[i*3 + 2] * (amb[2] + diff[2] * dot_product(curr_normal, light) + spec[2] * pow(dot_product(curr_normal, h), gloss ) );
+       GLfloat I_r = base_colors[0] * (amb[0] + diff[0] * dot_product(curr_normal, light) + spec[0] * pow(dot_product(curr_normal, h), m ) );
+        GLfloat I_g = base_colors[i*3 + 1] * (amb[1] + diff[1] * dot_product(curr_normal, light) + spec[1] * pow(dot_product(curr_normal, h), m ) );
+        GLfloat I_b = base_colors[i*3 + 2] * (amb[2] + diff[2] * dot_product(curr_normal, light) + spec[2] * pow(dot_product(curr_normal, h), m ) );
 
         colors.push_back(I_r);
         colors.push_back(I_g);
@@ -447,7 +446,6 @@ ObjectModel build_room() {
  	}
 
 	room_model.set_base_colors(colors);
-	room_model.set_colors(colors);
 
 	return room_model;
 }
@@ -480,7 +478,6 @@ ObjectModel build_desk() {
 	}
 
 	desk_model.set_base_colors(colors);
-	desk_model.set_colors(colors);
 	return desk_model;
 }
 
@@ -517,7 +514,7 @@ ObjectModel build_whiteboard() {
 	}
 
 	board_model.set_base_colors(colors);
-	board_model.set_colors(colors);
+
 
 	return board_model;
 }
@@ -559,7 +556,7 @@ ObjectModel build_monitor() {
 	}
 
 	monitor_model.set_base_colors(colors);
-	monitor_model.set_colors(colors);
+
 
 	return monitor_model;
 }
@@ -616,7 +613,6 @@ ObjectModel build_chair() {
 	}
 
 	chair_model.set_base_colors(colors);
-	chair_model.set_colors(colors);	
 
 	return chair_model;
 }
@@ -646,10 +642,10 @@ vector<GLfloat> init_color(vector<GLfloat> scene) {
     vector<GLfloat> colors;
     colors = build_room().get_colors();
     
-    vector<GLfloat> desk_colors = build_desk().get_colors();
-    vector<GLfloat> board_colors = build_whiteboard().get_colors();
-    vector<GLfloat>  monitor_colors = build_monitor().get_colors();
-    vector<GLfloat> chair_colors = build_chair().get_colors();
+    vector<GLfloat> desk_colors = build_desk().get_base_colors();
+    vector<GLfloat> board_colors = build_whiteboard().get_base_colors();
+    vector<GLfloat>  monitor_colors = build_monitor().get_base_colors();
+    vector<GLfloat> chair_colors = build_chair().get_base_colors();
 
     colors.insert(colors.end(), desk_colors.begin(), desk_colors.end());
     colors.insert(colors.end(), board_colors.begin(), board_colors.end());
@@ -663,17 +659,26 @@ vector<GLfloat> init_color(vector<GLfloat> scene) {
 void display_func() {
     glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
     
-    // TODO: Initialize your scene at every iteration
-    
+    SCENE.set_points(init_scene());
+    SCENE.set_normals(generate_normals(SCENE.get_points()));
+    SCENE.set_base_colors(init_color(SCENE.get_points()));
     
     // TODO: Apply shading to the scene
-    
-    
+    vector<GLfloat> light_source = {2.0, 3.0, 5.0};
+    vector<GLfloat> camera = {2.0, 3.0, 5.0};
+    vector<GLfloat> amb = {0.5, 0.5, 0.5};
+    vector<GLfloat> diff = {0.1, 0.1, 0.1};
+    vector<GLfloat> spec = {0.1, 0.1, 0.1};
+    GLfloat gloss = 0.1;
+
+    apply_shading(SCENE, light_source, camera, amb, diff, spec, gloss);
     // TODO: Rotate the scene using the rotation matrix
+    vector<GLfloat> rotate_y = rotation_matrix_y(deg2rad(THETA));
+
+    vector<GLfloat> rotated_points_y = mat_mult(rotate_y, SCENE.get_points());
+
+    SCENE.set_points(rotated_points_y);
     
-    SCENE.set_points(init_scene());
-    SCENE.set_base_colors(init_color(SCENE.get_points()));
-    SCENE.set_colors(init_color(SCENE.get_points()));
     
     GLfloat* scene_vertices = vector2array(to_cartesian_coord(SCENE.get_points()));
     GLfloat* color_vertices = vector2array(SCENE.get_colors());
