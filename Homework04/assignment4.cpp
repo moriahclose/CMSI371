@@ -425,6 +425,15 @@ ObjectModel build_room() {
 	ObjectModel room_model;
 	room_model.set_points(room);
 	room_model.set_normals( generate_normals(room_model.get_points()) );
+	
+	vector<GLfloat> colors;
+	for ( int i = 0; i < 18; i++) {
+		vector<GLfloat> new_colors = init_base_color(0,0,1);
+		colors.insert(colors.end(), new_colors.begin(), new_colors.end());
+ 	}
+
+	room_model.set_base_colors(colors);
+	room_model.set_colors(colors);
 
 	return room_model;
 }
@@ -448,7 +457,7 @@ ObjectModel build_desk() {
 
 	ObjectModel desk_model;
 	desk_model.set_points(desk);
-
+	desk_model.set_normals( generate_normals(desk_model.get_points()) );
 	return desk_model;
 }
 
@@ -541,10 +550,18 @@ ObjectModel build_chair() {
 // Construct the scene using objects built from cubes/prisms
 vector<GLfloat> init_scene() {
     vector<GLfloat> scene;
-    
-    // TODO: Build your scene here
 
    scene = build_room().get_points();
+
+   vector<GLfloat> desk = build_desk().get_points();
+   vector<GLfloat> whiteboard = build_whiteboard().get_points();
+   vector<GLfloat> monitor = build_monitor().get_points();
+   vector<GLfloat> chair = build_chair().get_points();
+
+   scene.insert(scene.end(), desk.begin(), desk.end());
+   scene.insert(scene.end(), whiteboard.begin(), whiteboard.end());
+   scene.insert(scene.end(), monitor.begin(), monitor.end());
+   scene.insert(scene.end(), chair.begin(), chair.end());
     
     return scene;
 }
@@ -553,7 +570,10 @@ vector<GLfloat> init_scene() {
 vector<GLfloat> init_color() {
     vector<GLfloat> colors;
     
-    // TODO: Construct the base colors of the scene
+    ObjectModel room = build_room();
+    for (int i = 0; i < room.get_points().size(); i++) {
+	colors.push_back(0);
+    }
     
     return colors;
 }
