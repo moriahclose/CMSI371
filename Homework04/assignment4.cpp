@@ -640,7 +640,7 @@ vector<GLfloat> init_scene() {
 // Construct the color mapping of the scene
 vector<GLfloat> init_color(vector<GLfloat> scene) {
     vector<GLfloat> colors;
-    colors = build_room().get_colors();
+    colors = build_room().get_base_colors();
     
     vector<GLfloat> desk_colors = build_desk().get_base_colors();
     vector<GLfloat> board_colors = build_whiteboard().get_base_colors();
@@ -662,6 +662,7 @@ void display_func() {
     SCENE.set_points(init_scene());
     SCENE.set_normals(generate_normals(SCENE.get_points()));
     SCENE.set_base_colors(init_color(SCENE.get_points()));
+    SCENE.set_colors(init_color(SCENE.get_points()));
     
     // TODO: Apply shading to the scene
     vector<GLfloat> light_source = {2.0, 3.0, 5.0};
@@ -671,7 +672,7 @@ void display_func() {
     vector<GLfloat> spec = {0.1, 0.1, 0.1};
     GLfloat gloss = 0.1;
 
-    apply_shading(SCENE, light_source, camera, amb, diff, spec, gloss);
+    //apply_shading(SCENE, light_source, camera, amb, diff, spec, gloss);
     // TODO: Rotate the scene using the rotation matrix
     vector<GLfloat> rotate_y = rotation_matrix_y(deg2rad(THETA));
 
@@ -706,7 +707,7 @@ void display_func() {
 }
 
 void idle_func() {
-    THETA = THETA + 0.3;
+    THETA = THETA - 0.3;
     display_func();
 }
 
@@ -723,7 +724,7 @@ int main (int argc, char **argv) {
     
     // Set up our display function
     glutDisplayFunc(display_func);
-    //glutIdleFunc(idle_func);
+    glutIdleFunc(idle_func);
     // Render our world
     glutMainLoop();
     
