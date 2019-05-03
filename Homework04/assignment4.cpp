@@ -1,7 +1,7 @@
 /***
 Assignment-4: Shading via Illumination and Colors
 
-Name: Wong, Alex (Please write your name in Last Name, First Name format)
+Name: Tolliver, Moriah
 
 Collaborators: Doe, John; Doe, Jane
 ** Note: although the assignment should be completed individually
@@ -427,8 +427,22 @@ ObjectModel build_room() {
 	room_model.set_normals( generate_normals(room_model.get_points()) );
 	
 	vector<GLfloat> colors;
-	for ( int i = 0; i < 18; i++) {
-		vector<GLfloat> new_colors = init_base_color(0,0,1);
+
+	//color right wall
+	vector<GLfloat> new_colors = init_base_color(0.90,0.87,0.80);
+	for ( int i = 0; i < 6; i++) {
+		colors.insert(colors.end(), new_colors.begin(), new_colors.end());
+ 	}
+
+	//color left wall
+        new_colors = init_base_color(0.49,0.00,0.16); 
+	for ( int i = 0; i < 6; i++) {
+		colors.insert(colors.end(), new_colors.begin(), new_colors.end());
+ 	}
+
+	//color floor
+	new_colors = init_base_color(0.50,0.50,0.41);
+	for ( int i = 0; i < 6; i++) {
 		colors.insert(colors.end(), new_colors.begin(), new_colors.end());
  	}
 
@@ -458,6 +472,15 @@ ObjectModel build_desk() {
 	ObjectModel desk_model;
 	desk_model.set_points(desk);
 	desk_model.set_normals( generate_normals(desk_model.get_points()) );
+
+	vector<GLfloat> colors;
+	vector<GLfloat> new_colors = init_base_color(0.67, 0.67, 0.67);
+	for (int i = 0; i < 18; i++) {
+		colors.insert(colors.end(), new_colors.begin(), new_colors.end());
+	}
+
+	desk_model.set_base_colors(colors);
+	desk_model.set_colors(colors);
 	return desk_model;
 }
 
@@ -477,6 +500,24 @@ ObjectModel build_whiteboard() {
 
 	ObjectModel board_model;
 	board_model.set_points(whiteboard);
+	board_model.set_normals( generate_normals(board_model.get_points()) );
+
+	vector<GLfloat> colors;
+	
+	//color border
+	vector<GLfloat> new_color = init_base_color(0.16, 0.14, 0.13);
+	for (int i = 0; i < 6; i++) {
+		colors.insert(colors.end(), new_color.begin(), new_color.end());
+	}
+
+	//color board
+	new_color = init_base_color(1.00, 0.99, 1.00);
+	for (int i = 0; i < 6; i++) {
+		colors.insert(colors.end(), new_color.begin(), new_color.end());
+	}
+
+	board_model.set_base_colors(colors);
+	board_model.set_colors(colors);
 
 	return board_model;
 }
@@ -502,6 +543,23 @@ ObjectModel build_monitor() {
 
 	ObjectModel monitor_model;
 	monitor_model.set_points(return_monitor);
+
+	vector<GLfloat> colors;
+
+	//color monitor 
+	vector<GLfloat> new_color = init_base_color(0.00, 0.00, 0.00);
+	for (int i = 0; i < 6; i++) {
+		colors.insert(colors.end(), new_color.begin(), new_color.end());
+	}
+
+	//color stand & bottom
+	new_color = init_base_color(0.14, 0.13,0.11);
+	for (int i = 0; i < 12; i++) {
+		colors.insert(colors.end(), new_color.begin(), new_color.end());
+	}
+
+	monitor_model.set_base_colors(colors);
+	monitor_model.set_colors(colors);
 
 	return monitor_model;
 }
@@ -543,6 +601,23 @@ ObjectModel build_chair() {
 	ObjectModel chair_model;
 	chair_model.set_points(chair);
 
+	vector<GLfloat> colors;
+
+	//color back and bottom
+	vector<GLfloat> new_color = init_base_color(0.23, 0.24, 0.21);
+	for (int i = 0; i < 12; i++) {
+		colors.insert(colors.end(), new_color.begin(), new_color.end());
+	}
+
+	//color stand and legs
+	new_color = init_base_color(0.14, 0.13, 0.14);
+	for (int i = 0; i < 30; i++) {
+		colors.insert(colors.end(), new_color.begin(), new_color.end());
+	}
+
+	chair_model.set_base_colors(colors);
+	chair_model.set_colors(colors);	
+
 	return chair_model;
 }
 
@@ -567,14 +642,20 @@ vector<GLfloat> init_scene() {
 }
 
 // Construct the color mapping of the scene
-vector<GLfloat> init_color() {
+vector<GLfloat> init_color(vector<GLfloat> scene) {
     vector<GLfloat> colors;
+    colors = build_room().get_colors();
     
-    ObjectModel room = build_room();
-    for (int i = 0; i < room.get_points().size(); i++) {
-	colors.push_back(0);
-    }
-    
+    vector<GLfloat> desk_colors = build_desk().get_colors();
+    vector<GLfloat> board_colors = build_whiteboard().get_colors();
+    vector<GLfloat>  monitor_colors = build_monitor().get_colors();
+    vector<GLfloat> chair_colors = build_chair().get_colors();
+
+    colors.insert(colors.end(), desk_colors.begin(), desk_colors.end());
+    colors.insert(colors.end(), board_colors.begin(), board_colors.end());
+    colors.insert(colors.end(), monitor_colors.begin(), monitor_colors.end());
+    colors.insert(colors.end(), chair_colors.begin(), chair_colors.end());
+
     return colors;
 }
 
@@ -590,6 +671,9 @@ void display_func() {
     
     // TODO: Rotate the scene using the rotation matrix
     
+    SCENE.set_points(init_scene());
+    SCENE.set_base_colors(init_color(SCENE.get_points()));
+    SCENE.set_colors(init_color(SCENE.get_points()));
     
     GLfloat* scene_vertices = vector2array(to_cartesian_coord(SCENE.get_points()));
     GLfloat* color_vertices = vector2array(SCENE.get_colors());
@@ -632,12 +716,9 @@ int main (int argc, char **argv) {
     setup();
     init_camera();
     
-    SCENE.set_points(init_scene());
-    SCENE.set_base_colors(init_color());
-    
     // Set up our display function
     glutDisplayFunc(display_func);
-    glutIdleFunc(idle_func);
+    //glutIdleFunc(idle_func);
     // Render our world
     glutMainLoop();
     
