@@ -396,8 +396,8 @@ void init_camera() {
     glLoadIdentity();
     // Define a 50 degree field of view, 1:1 aspect ratio, near and far planes at 3 and 7
     gluPerspective(50.0, 1.0, 2.0, 10.0);
-    // Position camera at (2, 3, 5), attention at (0, 0, 0), up at (0, 1, 0)
-gluLookAt(2.0, 3.0, 5.0, 0.0, 0.0, 0.0, 0.0, 1.0, 0.0);
+    // Position camera at (2, 2, 5), attention at (0, 0, 0), up at (0, 1, 0)
+gluLookAt(2.0, 2.0, 5.0, 0.0, 0.0, 0.0, 0.0, 1.0, 0.0);
     
 }
 
@@ -662,7 +662,7 @@ void display_func() {
     
     // TODO: Apply shading to the scene
     vector<GLfloat> light_source = {0,0,0};
-    vector<GLfloat> camera = {2.0, 3.0, 5.0};
+    vector<GLfloat> camera = {2.0, 2.0, 5.0};
     vector<GLfloat> amb = {0.6, 0.6, 0.6};
     vector<GLfloat> diff = {0.5, 0.5, 0.5};
     vector<GLfloat> spec = {0.5, 0.5, 0.5};
