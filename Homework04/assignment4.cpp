@@ -3,13 +3,9 @@ Assignment-4: Shading via Illumination and Colors
 
 Name: Tolliver, Moriah
 
-Collaborators: Doe, John; Doe, Jane
-** Note: although the assignment should be completed individually
-you may speak with classmates on high level algorithmic concepts. Please
-list their names in this section
+Collaborators: Nguyen, Katie; Zafiris, Serena
 
-Project Summary: A short paragraph (3-4 sentences) describing the work you
-did for the project.
+Project Summary: I created and lighted an office scene using Gouraud Shading. The scene is constructed from ObjectModels that initialize the points of each object and its base colors. Then I used the illumination equation to apply shading to the scene as whole. 
 ***/
 
 
@@ -277,7 +273,9 @@ vector<GLfloat> generate_normals(vector<GLfloat> points) {
 				  points[i+7] - points[i+10],
 				  points[i+8] - points[i+11] };
 	   vector<GLfloat> add = cross_product(a, b);
-	   normals.insert(normals.end(), add.begin(), add.end() );
+	   for (int i = 0; i < 4; i++) {
+	   	normals.insert(normals.end(), add.begin(), add.end() );
+	   }
    }
 
     return normals;
@@ -352,7 +350,7 @@ ObjectModel apply_shading(ObjectModel object_model, vector<GLfloat> light_source
 
         h = normalize(h);
 
-       GLfloat I_r = base_colors[0] * (amb[0] + diff[0] * dot_product(curr_normal, light) + spec[0] * pow(dot_product(curr_normal, h), m ) );
+       GLfloat I_r = base_colors[i*3] * (amb[0] + diff[0] * dot_product(curr_normal, light) + spec[0] * pow(dot_product(curr_normal, h), m ) );
         GLfloat I_g = base_colors[i*3 + 1] * (amb[1] + diff[1] * dot_product(curr_normal, light) + spec[1] * pow(dot_product(curr_normal, h), m ) );
         GLfloat I_b = base_colors[i*3 + 2] * (amb[2] + diff[2] * dot_product(curr_normal, light) + spec[2] * pow(dot_product(curr_normal, h), m ) );
 
@@ -633,7 +631,6 @@ vector<GLfloat> init_scene() {
    scene.insert(scene.end(), whiteboard.begin(), whiteboard.end());
    scene.insert(scene.end(), monitor.begin(), monitor.end());
    scene.insert(scene.end(), chair.begin(), chair.end());
-    
     return scene;
 }
 
@@ -662,17 +659,17 @@ void display_func() {
     SCENE.set_points(init_scene());
     SCENE.set_normals(generate_normals(SCENE.get_points()));
     SCENE.set_base_colors(init_color(SCENE.get_points()));
-    SCENE.set_colors(init_color(SCENE.get_points()));
     
     // TODO: Apply shading to the scene
-    vector<GLfloat> light_source = {2.0, 3.0, 5.0};
+    vector<GLfloat> light_source = {0,0,0};
     vector<GLfloat> camera = {2.0, 3.0, 5.0};
-    vector<GLfloat> amb = {0.5, 0.5, 0.5};
-    vector<GLfloat> diff = {0.1, 0.1, 0.1};
-    vector<GLfloat> spec = {0.1, 0.1, 0.1};
-    GLfloat gloss = 0.1;
+    vector<GLfloat> amb = {0.6, 0.6, 0.6};
+    vector<GLfloat> diff = {0.5, 0.5, 0.5};
+    vector<GLfloat> spec = {0.5, 0.5, 0.5};
+    GLfloat gloss = 0.0;
 
-    //apply_shading(SCENE, light_source, camera, amb, diff, spec, gloss);
+    SCENE = apply_shading(SCENE, light_source, camera, amb, diff, spec, gloss);
+
     // TODO: Rotate the scene using the rotation matrix
     vector<GLfloat> rotate_y = rotation_matrix_y(deg2rad(THETA));
 
@@ -696,7 +693,7 @@ void display_func() {
                    color_vertices);     // Pointer to memory location to read from
     
     // Draw quad point planes: each 4 vertices with 3 dimensions
-    glDrawArrays(GL_QUADS, 0, (int)SCENE.get_points().size() / 3);
+    glDrawArrays(GL_QUADS, 0, (int)SCENE.get_points().size() / 4);
     
     glFlush();			//Finish rendering
     glutSwapBuffers();
