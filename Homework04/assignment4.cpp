@@ -5,7 +5,7 @@ Name: Tolliver, Moriah
 
 Collaborators: Nguyen, Katie; Zafiris, Serena
 
-Project Summary: I created and lighted an office scene using Gouraud Shading. The scene is constructed from ObjectModels that initialize the points of each object and its base colors. Then I used the illumination equation to apply shading to the scene as whole. 
+Project Summary: I created an office scene using ObjectModels to set the points and base colors for each object, then adding all of these objects together to create a scene object model. I applied shading to the scene using Gouraud Shading. 
 ***/
 
 
@@ -714,7 +714,7 @@ int main (int argc, char **argv) {
     glutInitDisplayMode(GLUT_RGB | GLUT_DOUBLE | GLUT_DEPTH);
     glutInitWindowSize(800, 600);
     // Create a window with rendering context and everything else we need
-    glutCreateWindow("Assignment 4");
+    glutCreateWindow("Moriah Tolliver Assignment 4");
     
     setup();
     init_camera();
